@@ -1,0 +1,7 @@
+build/
+docs/
+processed/
+research/
+.git/
+.venv/
+.vscode/
