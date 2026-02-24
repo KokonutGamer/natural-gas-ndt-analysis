@@ -5,8 +5,10 @@ cmake_minimum_required(VERSION 3.23)
 project(NDTImageProcessor LANGUAGES CXX)
 
 # C++ configuration details
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 20)              # C++ version 20
+set(CMAKE_CXX_STANDARD_REQUIRED ON)     # C++ version required
+set(CMAKE_CXX_VISIBILITY_PRESET hidden) # Set default visibility to hidden
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)  # Ensure that inline functions also have hidden visibility
 
 # Used for C/C++ IntelliSense
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

@@ -10,8 +10,8 @@ cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
     int kernelSize = 3;
     cv::Mat maxKernel = cv::getStructuringElement(
         cv::MORPH_RECT,
-        cv::Size(2 * kernelSize + 1, 2 * kernelSize + 1),
-        cv::Point(kernelSize, kernelSize));
+        cv::Size(kernelSize, kernelSize),
+        cv::Point(kernelSize / 2, kernelSize / 2));
 
     for (int i = 0; i < numberOfFilters; i++)
     {
@@ -63,8 +63,8 @@ cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
     kernelSize = 5;
     cv::Mat morphKernel = cv::getStructuringElement(
         cv::MORPH_RECT,
-        cv::Size(2 * kernelSize + 1, 2 * kernelSize + 1),
-        cv::Point(kernelSize, kernelSize));
+        cv::Size(kernelSize, kernelSize),
+        cv::Point(kernelSize / 2, kernelSize / 2));
 
     for (int i = 0; i < numberOfMorphs; i++)
     {
