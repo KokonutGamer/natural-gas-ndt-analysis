@@ -121,4 +121,5 @@ set(PYTHON_INSTALL_DIR "lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MIN
 install(DIRECTORY scripts DESTINATION ${PYTHON_INSTALL_DIR})
 
 # Compile macro definitions
+target_compile_definitions(imgproc_core PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
 target_compile_definitions(benchmarks PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")

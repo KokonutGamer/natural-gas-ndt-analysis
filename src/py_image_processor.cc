@@ -8,6 +8,10 @@ PyImageProcessor::PyImageProcessor()
     // acquire the lock on the python gil
     py::gil_scoped_acquire acquire;
 
+    // import the sys module and add project root directory
+    py::module_ sys = py::module_::import("sys");
+    sys.attr("path").attr("append")(PROJECT_ROOT_DIR);
+
     // import the python module and functions
     pyProcessor = py::module_::import("scripts.pyprocessor");
     executeFunction = pyProcessor.attr("execute");
