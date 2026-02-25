@@ -5,42 +5,23 @@
 #include "include/cpp_image_processor.h"
 #include "include/py_image_processor.h"
 
-namespace py = pybind11;
+// processors only ever created once
+static std::unique_ptr<CppImageProcessor> cppImageProcessor = std::make_unique<CppImageProcessor>();
+static std::unique_ptr<PyImageProcessor> pyImageProcessor = std::make_unique<PyImageProcessor>();
 
-/**
- * TODO document fixture
- */
-class NameTest : public ::testing::Test
+TEST(NameTest, CppImageProcessorHasCorrectName)
 {
-protected:
-    static void SetUpTestSuite()
-    {
-        if (!Py_IsInitialized())
-        {
-            py::initialize_interpreter();
-        }
-    }
-};
-
-TEST_F(NameTest, CppImageProcessorHasCorrectName)
-{
-    // Arrange
-    auto processor = std::make_unique<CppImageProcessor>();
-
     // Act
-    std::string name = processor->getName();
+    std::string name = cppImageProcessor->getName();
 
     // Assert
     EXPECT_EQ(name, "C++ image processor");
 }
 
-TEST_F(NameTest, PyImageProcessorHasCorrectName)
+TEST(NameTest, PyImageProcessorHasCorrectName)
 {
-    // Arrange
-    auto processor = std::make_unique<PyImageProcessor>();
-
     // Act
-    std::string name = processor->getName();
+    std::string name = pyImageProcessor->getName();
 
     // Assert
     EXPECT_EQ(name, "Python image processor");
