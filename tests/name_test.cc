@@ -1,9 +1,9 @@
-#include <gtest/gtest.h>
-#include <pybind11/embed.h>
-
 #include "include/image_processor.h"
 #include "include/cpp_image_processor.h"
 #include "include/py_image_processor.h"
+
+#include <gtest/gtest.h>
+#include <pybind11/embed.h>
 
 // processors only ever created once
 static std::unique_ptr<CppImageProcessor> cppImageProcessor = std::make_unique<CppImageProcessor>();

@@ -60,6 +60,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(tracy)
 
 # Python configuration
+set(Python3_FIND_VIRTUALENV FIRST)
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 message(STATUS "CMake found Python at: ${Python3_EXECUTABLE}")
 
