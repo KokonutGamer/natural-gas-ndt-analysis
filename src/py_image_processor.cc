@@ -30,7 +30,7 @@ cv::Mat PyImageProcessor::execute(const cv::Mat &image) const
     py::gil_scoped_acquire acquire;
     try
     {
-        return executeFunction(image).cast<cv::Mat>();
+        return executeFunction(image).cast<cv::Mat>().clone();
     }
     catch (const std::exception &e)
     {

@@ -3,7 +3,7 @@
 cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
 {
     // copy constructor
-    cv::Mat processedImage = image;
+    cv::Mat processedImage = image.clone();
 
     // filter parameters
     int numberOfFilters = 4;
