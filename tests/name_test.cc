@@ -12,7 +12,7 @@ static std::unique_ptr<PyImageProcessor> pyImageProcessor = std::make_unique<PyI
 TEST(NameTest, CppImageProcessorHasCorrectName)
 {
     // Act
-    std::string name = cppImageProcessor->getName();
+    std::string name = cppImageProcessor->getName("fmm");
 
     // Assert
     EXPECT_EQ(name, "C++ image processor");
@@ -21,8 +21,8 @@ TEST(NameTest, CppImageProcessorHasCorrectName)
 TEST(NameTest, PyImageProcessorHasCorrectName)
 {
     // Act
-    std::string name = pyImageProcessor->getName();
+    std::string name = pyImageProcessor->getName("fmm");
 
     // Assert
-    EXPECT_EQ(name, "Python image processor");
+    EXPECT_EQ(name, "Filter-Mask-Morph (FMM) Python image processor");
 }

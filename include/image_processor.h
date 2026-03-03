@@ -33,12 +33,12 @@ public:
     /**
      * TODO document execute method
      */
-    virtual cv::Mat execute(const cv::Mat &) const = 0;
+    virtual cv::Mat execute(const cv::Mat &image, const std::string method) const = 0;
 
     /**
      * TODO document name method
      */
-    virtual std::string getName() const = 0;
+    virtual std::string getName(const std::string method) const = 0;
 };
 
 #endif

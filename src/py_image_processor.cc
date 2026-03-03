@@ -27,7 +27,7 @@ PyImageProcessor::~PyImageProcessor()
     py::gil_scoped_acquire acquire;
 }
 
-cv::Mat PyImageProcessor::execute(const cv::Mat &image) const
+cv::Mat PyImageProcessor::execute(const cv::Mat &image, const std::string method) const
 {
     // acquire the lock on the python gil
     py::gil_scoped_acquire acquire;
@@ -36,7 +36,7 @@ cv::Mat PyImageProcessor::execute(const cv::Mat &image) const
     cv::Mat processedImage = image.clone();
     try
     {
-        this->dispatchExecute("ffm", processedImage);
+        this->dispatchExecute(method, processedImage);
         return processedImage;
     }
     catch (const std::exception &e)
@@ -47,13 +47,13 @@ cv::Mat PyImageProcessor::execute(const cv::Mat &image) const
     }
 }
 
-std::string PyImageProcessor::getName() const
+std::string PyImageProcessor::getName(const std::string method) const
 {
     // acquire the lock on the python gil
     py::gil_scoped_acquire acquire;
     try
     {
-        return this->dispatchName("ffm").cast<std::string>();
+        return this->dispatchName(method).cast<std::string>();
     }
     catch (const std::exception &e)
     {

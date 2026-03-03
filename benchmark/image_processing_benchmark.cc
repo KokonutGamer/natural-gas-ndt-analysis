@@ -45,7 +45,7 @@ BENCHMARK_F(CppImageProcessorFixture, CppImageProcessorBenchmark)(::benchmark::S
 {
     for (auto _ : state)
     {
-        cppImageProcessor->execute(image);
+        cppImageProcessor->execute(image, "fmm");
     }
 }
 
@@ -80,7 +80,7 @@ BENCHMARK_F(PyImageProcessorFixture, PyImageProcessorBenchmark)(::benchmark::Sta
 {
     for (auto _ : state)
     {
-        pyImageProcessor->execute(image);
+        pyImageProcessor->execute(image, "fmm");
     }
 }
 

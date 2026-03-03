@@ -26,12 +26,12 @@ public:
     /**
      * TODO document execute method
      */
-    cv::Mat execute(const cv::Mat &) const override;
+    cv::Mat execute(const cv::Mat &image, const std::string method) const override;
 
     /**
      * TODO document name method
      */
-    std::string getName() const override;
+    std::string getName(const std::string method) const override;
 
 private:
     /**

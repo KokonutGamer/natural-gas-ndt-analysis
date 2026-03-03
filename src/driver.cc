@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
                                                    "image processing software developed for detecting microcracks and "
                                                    "micropits on the Raspberry Pi 5");
 
-    options.add_options()("p,python", "Run with the embedded Python interpreter")("h,help", "Print usage")("i,image", "Process an image", cxxopts::value<std::string>()->default_value("./images/two_vertical_and_horizontal.tiff"))("o,output", "Output the processed image to a file", cxxopts::value<std::string>()->default_value("./processed/p_two_vertical_and_horizontal.tiff"));
+    options.add_options()("p,python", "Run with the embedded Python interpreter")("h,help", "Print usage")("i,image", "Process an image", cxxopts::value<std::string>()->default_value("./images/two_vertical_and_horizontal.tiff"))("o,output", "Output the processed image to a file", cxxopts::value<std::string>()->default_value("./processed/p_two_vertical_and_horizontal.tiff"))("a,algorithm", "Python algorithm used for processing the image", cxxopts::value<std::string>()->default_value("fmm"));
 
     auto result = options.parse(argc, argv);
 
@@ -55,7 +55,14 @@ int main(int argc, char *argv[])
         }
 
         // process the image using the specified processor
-        cv::Mat processedImage = processor->execute(image);
+        cv::Mat processedImage = processor->execute(image, result["algorithm"].as<std::string>());
+
+        // check if processing was successful
+        if (processedImage.empty())
+        {
+            std::cerr << "Failed to process image" << std::endl;
+            return EXIT_FAILURE;
+        }
 
         // write the image to a new file
         cv::imwrite(result["output"].as<std::string>(), processedImage);
@@ -66,6 +73,6 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    std::cout << processor->getName() << " processed " << result["image"].as<std::string>() << " to " << result["output"].as<std::string>() << std::endl;
+    std::cout << processor->getName(result["algorithm"].as<std::string>()) << " processed " << result["image"].as<std::string>() << " to " << result["output"].as<std::string>() << std::endl;
     return EXIT_SUCCESS;
 }

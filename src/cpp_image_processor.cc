@@ -1,6 +1,6 @@
 #include "include/cpp_image_processor.h"
 
-cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
+cv::Mat CppImageProcessor::execute(const cv::Mat &image, const std::string method) const
 {
     // deep copy of image
     cv::Mat processedImage = image.clone();
@@ -86,7 +86,7 @@ cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
     return processedImage;
 }
 
-std::string CppImageProcessor::getName() const
+std::string CppImageProcessor::getName(const std::string method) const
 {
     return "C++ image processor";
 }

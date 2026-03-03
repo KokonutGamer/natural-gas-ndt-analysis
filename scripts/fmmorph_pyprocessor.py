@@ -3,9 +3,9 @@ import numpy as np
 from abstract_pyprocessor import PyProcessor
 
 """
-TODO document FFMorphPyProcessor concrete class
+TODO document FMMorphPyProcessor concrete class
 """
-class FMMorphPyProcessor(PyProcessor, key='ffm'):
+class FMMorphPyProcessor(PyProcessor, key='fmm'):
     """
     TODO document execute method
     """
