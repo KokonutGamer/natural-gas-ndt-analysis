@@ -13,10 +13,6 @@ PyImageProcessor::PyImageProcessor()
     sys.attr("path").attr("append")(PROJECT_ROOT_DIR "/scripts");
 
     // import the python module and functions
-    pyProcessor = py::module_::import("pyprocessor");
-    executeFunction = pyProcessor.attr("execute");
-    getNameFunction = pyProcessor.attr("get_name");
-
     // import the abstract base class for python implementations
     py::module_::import("fmmorph_pyprocessor");
     this->registry = py::module_::import("abstract_pyprocessor").attr("PyProcessor").attr("get_registry")();
@@ -54,11 +50,11 @@ std::string PyImageProcessor::getName() const
     py::gil_scoped_acquire acquire;
     try
     {
-        return getNameFunction().cast<std::string>();
+        return this->registry["ffm"].attr("get_name")(this->registry["ffm"]).cast<std::string>();
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
-        return "Get name failed";
+        return "(Get name failed)";
     }
 }

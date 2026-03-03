@@ -40,21 +40,6 @@ private:
     py::scoped_interpreter guard;
 
     /**
-     * TODO document module
-     */
-    py::module_ pyProcessor;
-
-    /**
-     * TODO document function
-     */
-    py::object executeFunction;
-
-    /**
-     * TODO document function
-     */
-    py::object getNameFunction;
-
-    /**
      * TODO document registry
      */
     py::dict registry;
