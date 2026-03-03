@@ -49,6 +49,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googlebenchmark)
 
+# Enable the Tracy profiler
+option(TRACY_ENABLE "Enable Tracy profiling" ON)
+
 # Tracy profiler
 FetchContent_Declare(
     tracy
@@ -67,50 +70,43 @@ message(STATUS "CMake found Python at: ${Python3_EXECUTABLE}")
 # OpenCV configuration
 find_package(OpenCV REQUIRED)
 
-# Core library - logic that does not contain main
-add_library(imgproc_core
-    src/cpp_image_processor.cc
-    src/py_image_processor.cc
-)
+set(CORE_SRCS src/cpp_image_processor.cc src/py_image_processor.cc)
 
-# Define include directories for the library
+# Clean core library without embedded profiler
+add_library(imgproc_core ${CORE_SRCS})
 target_include_directories(imgproc_core PUBLIC .) # root for relative imports
-
-# Link Python, Pybind, and OpenCV to the core library
+target_include_directories(imgproc_core PUBLIC ${tracy_SOURCE_DIR}/public)
 target_link_libraries(imgproc_core PUBLIC pybind11::embed ${OpenCV_LIBS})
+target_compile_definitions(imgproc_core PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
 
-# Application
-add_executable(imgproc
-    src/driver.cc
-)
+# Profiled core library for main executable
+add_library(imgproc_core_tracy ${CORE_SRCS})
+target_include_directories(imgproc_core_tracy PUBLIC .) # root for relative imports
+target_link_libraries(imgproc_core_tracy PUBLIC pybind11::embed ${OpenCV_LIBS} TracyClient)
+target_compile_definitions(imgproc_core_tracy PUBLIC TRACY_ENABLE)
+target_compile_definitions(imgproc_core_tracy PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
+find_package(Threads REQUIRED)
+target_link_libraries(imgproc_core_tracy PUBLIC Threads::Threads ${CMAKE_DL_LIBS})
 
-# Link core logic as a library
-target_link_libraries(imgproc PRIVATE imgproc_core)
+
+# Main application with profiler (links with profiled core library)
+add_executable(imgproc src/driver.cc)
+target_link_libraries(imgproc PRIVATE imgproc_core_tracy)
 
 # Testing with Google Test
 enable_testing()
 
-add_executable(unit_tests
-    tests/name_test.cc
-)
-
-target_link_libraries(unit_tests PRIVATE
-    imgproc_core
-    GTest::gtest_main
-)
+# Unit tests with Google test (links with clean core library)
+add_executable(unit_tests tests/name_test.cc)
+target_link_libraries(unit_tests PRIVATE imgproc_core GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(unit_tests)
 
-# Benchmarking with Google Benchmark
-add_executable(benchmarks
-    benchmark/image_processing_benchmark.cc
-)
-
-target_link_libraries(benchmarks PRIVATE
-    imgproc_core
-    benchmark::benchmark_main
-)
+# Benchmarks with Google benchmark
+add_executable(benchmarks benchmark/image_processing_benchmark.cc)
+target_link_libraries(benchmarks PRIVATE imgproc_core benchmark::benchmark_main)
+target_compile_definitions(benchmarks PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
 
 # Install the main binary
 install(TARGETS imgproc DESTINATION bin)
@@ -120,7 +116,3 @@ set(PYTHON_INSTALL_DIR "lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MIN
 
 # Install scripts to the relative path
 install(DIRECTORY scripts DESTINATION ${PYTHON_INSTALL_DIR})
-
-# Compile macro definitions
-target_compile_definitions(imgproc_core PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
-target_compile_definitions(benchmarks PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
