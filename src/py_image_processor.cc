@@ -12,9 +12,8 @@ PyImageProcessor::PyImageProcessor()
     py::module_ sys = py::module_::import("sys");
     sys.attr("path").attr("append")(PROJECT_ROOT_DIR "/scripts");
 
-    // import the python module and functions
-    // import the abstract base class for python implementations
-    py::module_::import("fmmorph_pyprocessor");
+    // import all concrete implementations of the abstract base class
+    py::module_::import("plugin_loader");
 
     // setup abstract base class bindings
     py::object abc = py::module_::import("abstract_pyprocessor").attr("PyProcessor");
