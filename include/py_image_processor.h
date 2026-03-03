@@ -40,6 +40,16 @@ private:
     py::scoped_interpreter guard;
 
     /**
+     * TODO document dispatch execute
+     */
+    py::function dispatchExecute;
+
+    /**
+     * TODO document dispatch name
+     */
+    py::function dispatchName;
+
+    /**
      * TODO document registry
      */
     py::dict registry;

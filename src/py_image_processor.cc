@@ -15,7 +15,11 @@ PyImageProcessor::PyImageProcessor()
     // import the python module and functions
     // import the abstract base class for python implementations
     py::module_::import("fmmorph_pyprocessor");
-    this->registry = py::module_::import("abstract_pyprocessor").attr("PyProcessor").attr("get_registry")();
+
+    // setup abstract base class bindings
+    py::object abc = py::module_::import("abstract_pyprocessor").attr("PyProcessor");
+    this->dispatchExecute = abc.attr("dispatch_execute");
+    this->dispatchName = abc.attr("dispatch_name");
 }
 
 PyImageProcessor::~PyImageProcessor()
@@ -33,7 +37,7 @@ cv::Mat PyImageProcessor::execute(const cv::Mat &image) const
     cv::Mat processedImage = image.clone();
     try
     {
-        this->registry["ffm"].attr("execute")(this->registry["ffm"], processedImage);
+        this->dispatchExecute("ffm", processedImage);
         return processedImage;
     }
     catch (const std::exception &e)
@@ -50,7 +54,7 @@ std::string PyImageProcessor::getName() const
     py::gil_scoped_acquire acquire;
     try
     {
-        return this->registry["ffm"].attr("get_name")(this->registry["ffm"]).cast<std::string>();
+        return this->dispatchName("ffm").cast<std::string>();
     }
     catch (const std::exception &e)
     {
