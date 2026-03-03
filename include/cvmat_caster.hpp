@@ -135,7 +135,7 @@ namespace pybind11
                 // copy m's header info while incrementing the shared pointer in m
                 cv::Mat* safeMat = new cv::Mat(m);
 
-                // create a capsule to be attached for cleanup in Pythong's GC
+                // create a capsule to be attached for cleanup in Python's GC
                 capsule cleanup(safeMat, [](void * ptr) {
                     // reinterpret the void pointer from Python into a cv::Mat
                     cv::Mat* matToDelete = reinterpret_cast<cv::Mat*>(ptr);

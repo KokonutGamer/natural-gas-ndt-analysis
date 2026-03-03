@@ -2,7 +2,7 @@
 
 cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
 {
-    // copy constructor
+    // deep copy of image
     cv::Mat processedImage = image.clone();
 
     // filter parameters

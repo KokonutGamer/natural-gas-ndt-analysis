@@ -53,6 +53,11 @@ private:
      * TODO document function
      */
     py::object getNameFunction;
+
+    /**
+     * TODO document registry
+     */
+    py::dict registry;
 };
 
 #endif
