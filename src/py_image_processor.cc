@@ -2,6 +2,7 @@
 #include "include/py_image_processor.h"
 
 #include <iostream>
+#include <pybind11/stl.h>
 
 PyImageProcessor::PyImageProcessor()
 {
@@ -62,5 +63,20 @@ std::string PyImageProcessor::getName(const std::string method) const
     {
         std::cerr << e.what() << '\n';
         return "(Get name failed)";
+    }
+}
+
+std::vector<std::string> PyImageProcessor::getMethods() const
+{
+    // acquire the lock on the python gil
+    py::gil_scoped_acquire acquire;
+    try
+    {
+        return py::list(this->registry.attr("keys")()).cast<std::vector<std::string>>();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+        return {};
     }
 }

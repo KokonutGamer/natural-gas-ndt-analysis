@@ -33,6 +33,11 @@ public:
      */
     std::string getName(const std::string method) const override;
 
+    /**
+     * TODO document registry key methods
+     */
+    std::vector<std::string> getMethods() const;
+
 private:
     /**
      * TODO document guard
