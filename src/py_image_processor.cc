@@ -19,6 +19,9 @@ PyImageProcessor::PyImageProcessor()
     py::object abc = py::module_::import("abstract_pyprocessor").attr("PyProcessor");
     this->dispatchExecute = abc.attr("dispatch_execute");
     this->dispatchName = abc.attr("dispatch_name");
+
+    // store the registry for benchmark information
+    this->registry = abc.attr("get_registry")();
 }
 
 PyImageProcessor::~PyImageProcessor()
