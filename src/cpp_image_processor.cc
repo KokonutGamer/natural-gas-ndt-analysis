@@ -1,7 +1,12 @@
 #include "include/cpp_image_processor.h"
 
+#include <tracy/Tracy.hpp>
+
 cv::Mat CppImageProcessor::execute(const cv::Mat &image, const std::string method) const
 {
+    // record the function's name, the source file name, and the exact line number
+    ZoneScoped;
+
     // deep copy of image
     cv::Mat processedImage = image.clone();
 
