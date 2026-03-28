@@ -23,3 +23,5 @@ Thumbs.db
 
 # --- Misc ---
 processed/
+*.onnx
+*.onnx.data
