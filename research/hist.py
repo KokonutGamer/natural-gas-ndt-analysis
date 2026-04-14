@@ -11,8 +11,9 @@ image_names = [
     # 'scratch_2.tiff',
     # 'scratch_3.tiff',
     # 'scratch_4.tiff',
-    'big-pit1.tiff',
-    'faint_pit.tiff'
+    # 'big-pit1.tiff',
+    # 'faint_pit.tiff'
+    # 'BlackIron_OMS_corrosion-crack.tif'
 ]
 
 def image_hist(image : cv2.typing.MatLike, title: str) -> None:
@@ -22,6 +23,7 @@ def image_hist(image : cv2.typing.MatLike, title: str) -> None:
     fig.suptitle(title)
     ax[1].set_ylabel("Frequency")
     ax[1].set_xlabel("Gray Value")
+    fig.savefig(f'figures/{title}.png')
 
 def setup_plot(image_name : str) -> None:
     image = cv2.imread(f'images/{image_name}', cv2.IMREAD_COLOR)
@@ -40,16 +42,22 @@ def setup_plot(image_name : str) -> None:
     gray_float = np.mean(image_float, axis=2)
     gray : cv2.typing.MatLike = gray_float.astype(np.uint8) # final image, equal-weighted average
 
+    ext = image_name.find('.')
+
     # unprocessed
-    image_hist(gray, f"{image_name} Distribution of Gray (Unprocessed)")
+    image_hist(gray, f"{image_name[:ext]} Distribution of Gray (Unprocessed)")
 
     gaussian_gray = cv2.GaussianBlur(gray, (0, 0), 9.5)
 
     # gaussian
-    image_hist(gaussian_gray, f"{image_name} Distribution of Gray (Gaussian)")
+    image_hist(gaussian_gray, f"{image_name[:ext]} Distribution of Gray (Gaussian)")
 
 
 if __name__ == "__main__":
+    
+    assert len(image_names) > 0, "No image names were provided"
+    assert len(image_names) <= 5, "Please limit the number of images to 5"
+    
     for filename in image_names:
         setup_plot(filename)
     plt.tight_layout()
