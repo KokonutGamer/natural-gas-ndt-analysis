@@ -22,6 +22,7 @@ venv/
 Thumbs.db
 
 # --- Misc ---
+figures/
 processed/
 *.onnx
 *.onnx.data

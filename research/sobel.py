@@ -3,6 +3,8 @@ import cv2
 # Load image in grayscale
 img = cv2.imread('images/scratch_2.tiff', cv2.IMREAD_GRAYSCALE)
 
+assert img is not None, "Image could not be loaded. Check the file path."
+
 # Apply sobel kernel with kernel size 3 x 3
 sobelx = cv2.Sobel(img, cv2.CV_64F, 1, 0, ksize=3) # Highlights vertical edges 
 sobely = cv2.Sobel(img, cv2.CV_64F, 0, 1, ksize=3) # Highlights horizontal edges

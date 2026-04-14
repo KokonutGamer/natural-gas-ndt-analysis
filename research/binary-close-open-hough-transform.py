@@ -21,6 +21,7 @@ image = cv2.imread('images/two_vertical_and_horizontal.tiff', cv2.IMREAD_GRAYSCA
 # image = cv2.imread('images/faint_pit.tiff', cv2.IMREAD_GRAYSCALE)
 # image = cv2.imread('images/pit.tiff', cv2.IMREAD_GRAYSCALE)
 
+assert image is not None, "Image could not be loaded. Check the file path."
 
 og = image.copy()
 

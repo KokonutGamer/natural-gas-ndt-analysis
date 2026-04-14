@@ -2,6 +2,8 @@ import cv2
 
 image = cv2.imread('images/scratch_2.tiff', cv2.IMREAD_GRAYSCALE)
 
+assert image is not None, "Image could not be loaded. Check the file path."
+
 # Apply Gaussian blur first to reduce noise
 blur = cv2.GaussianBlur(image, (5, 5), 1.4)
 
