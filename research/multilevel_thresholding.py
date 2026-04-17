@@ -7,11 +7,13 @@ from scipy.signal import find_peaks
 image_names = [
     # 'faint_pit.tiff',
     # 'big-pit1.tiff',
-    '1018Steel_Section_A1_largerMP.tiff',
-    '1018Steel_Section_A1_Raw.tiff',
-    '1018Steel_Section_A6_smallerMP.tiff',
-    'Aluminum_MP_1.tiff',
-    'Aluminum_MP_2.tiff',
+    # '1018Steel_Section_A1_largerMP.tiff',
+    # '1018Steel_Section_A1_Raw.tiff',
+    # '1018Steel_Section_A6_smallerMP.tiff',
+    # 'Aluminum_MP_1.tiff',
+    # 'Aluminum_MP_2.tiff',
+    # 'BlackIron_OMS_corrosion-crack.tif',
+    'cc-8.tif',
 ]
 
 def apply_multilevel_thresholding(image : cv2.typing.MatLike, title : str) -> None:
@@ -21,16 +23,16 @@ def apply_multilevel_thresholding(image : cv2.typing.MatLike, title : str) -> No
     hist, bin_edges = np.histogram(image.ravel(), bins=256, range=(0, 256))
     x_bins = bin_edges[:-1]
     sigma = 5.0
-    smoothed_hist = gaussian_filter1d(hist, sigma=sigma)
+    hist = gaussian_filter1d(hist, sigma=sigma)
     
     """
     ==================== DERIVATIVES ====================
     """
-    d1 = np.gradient(smoothed_hist)
+    d1 = np.gradient(hist)
     d2 = np.gradient(d1)
     
     # find local maxima
-    peaks, _ = find_peaks(smoothed_hist, prominence=50)
+    peaks, _ = find_peaks(hist, prominence=50)
     k = len(peaks)
     print(f"Found {k} local maxima at gray values: {peaks}")
     
@@ -38,7 +40,7 @@ def apply_multilevel_thresholding(image : cv2.typing.MatLike, title : str) -> No
     if k > 1:
         for i in range(k - 1):
             p1, p2 = peaks[i], peaks[i + 1]
-            valley = p1 + np.argmin(smoothed_hist[p1:p2])
+            valley = p1 + np.argmin(hist[p1:p2])
             valleys.append(valley)
     print(f"Calculated {len(valleys)} thresholds at: {valleys}")
     
@@ -64,8 +66,8 @@ def apply_multilevel_thresholding(image : cv2.typing.MatLike, title : str) -> No
     axs[0].axis('off')
 
     # histogram, first derivative, second derivative
-    axs[1].plot(x_bins, smoothed_hist, color='blue', label='Smoothed Hist')
-    axs[1].plot(peaks, smoothed_hist[list(peaks)], "x", color='red', markersize=10, label='Peaks')
+    axs[1].plot(x_bins, hist, color='blue', label='Smoothed Hist')
+    axs[1].plot(peaks, hist[list(peaks)], "x", color='red', markersize=10, label='Peaks')
     
     # vertical lines for thresholds
     for v in valleys:
@@ -106,11 +108,11 @@ def setup_plot(image_name: str) -> None:
     gray = gray_float.astype(np.uint8) 
 
     # We use the Gaussian blurred image for the cleanest segmentation
-    gaussian_gray = cv2.GaussianBlur(gray, (0, 0), 9.5)
+    # gaussian_gray = cv2.GaussianBlur(gray, (0, 0), 9.5)
 
     ext = image_name.find('.')
     base_name = image_name[:ext]
-    apply_multilevel_thresholding(gaussian_gray, base_name)
+    apply_multilevel_thresholding(gray, base_name)
 
 if __name__ == "__main__":
     assert len(image_names) > 0, "No image names were provided"

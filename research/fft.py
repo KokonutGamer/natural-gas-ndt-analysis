@@ -3,11 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 image_names = [
-    'faint_pit'    
+    'faint_pit.tiff',
+    'big-pit1.tiff',
+    '1018Steel_Section_A1_Raw.tiff'
 ]
 
 def fft(image_name : str) -> None:
-    image = cv2.imread(f'images/{image_name}.tiff', cv2.IMREAD_GRAYSCALE)
+    image = cv2.imread(f'images/{image_name}', cv2.IMREAD_GRAYSCALE)
     assert image is not None, f"{image_name} could not be found."
     
     np.mean(image)
@@ -22,7 +24,7 @@ def fft(image_name : str) -> None:
     cy, cx = h // 2, w // 2
     fshift[cy - 30:cy + 31, cx - 30:cx + 31] = 0
     f_ishift = np.fft.ifftshift(fshift)
-    hp = np.fft.ifft2(f_ishift)
+    hp = np.fft.ifft2(f_ishift) # high pass
     hp = np.real(hp)
     
     hp_8 = hp.astype(np.uint8)

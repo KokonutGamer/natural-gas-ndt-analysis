@@ -14,6 +14,7 @@ image_names = [
     # 'big-pit1.tiff',
     # 'faint_pit.tiff'
     # 'BlackIron_OMS_corrosion-crack.tif'
+    'cc-8.tif',
 ]
 
 def image_hist(image : cv2.typing.MatLike, title: str) -> None:
