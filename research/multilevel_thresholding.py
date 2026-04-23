@@ -13,7 +13,12 @@ image_names = [
     # 'Aluminum_MP_1.tiff',
     # 'Aluminum_MP_2.tiff',
     # 'BlackIron_OMS_corrosion-crack.tif',
-    'cc-8.tif',
+    # 'cc-8.tif',
+    'fs-1.bmp',
+    'fs-2.bmp',
+    'fs-3.bmp',
+    'fs-4.bmp',
+    'fs-5.bmp',
 ]
 
 def apply_multilevel_thresholding(image : cv2.typing.MatLike, title : str) -> None:

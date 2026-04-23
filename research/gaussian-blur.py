@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-image = cv2.imread('images/large_pit_1.tiff', cv2.IMREAD_COLOR)
+image = cv2.imread('images/cc-8.tif', cv2.IMREAD_COLOR)
 
 if image is None:
     raise FileNotFoundError("Image could not be loaded. Check the file path.")
