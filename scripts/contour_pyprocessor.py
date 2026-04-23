@@ -2,14 +2,25 @@ import cv2
 import numpy as np
 from abstract_pyprocessor import PyProcessor
 
-"""
-TODO document 
-"""
 class ContourPyProcessor(PyProcessor, key='cont'):
     """
-    TODO document execute method
+    Concrete implementation of PyProcessor that isolates and draws contours.
+    
+    Registered in the PyProcessor registry under the key 'cont'.
     """
+    
     def execute(self, image: np.ndarray) -> None:
+        """
+        Processes the image by filtering, thresholding, and drawing contours.
+        
+        Applies a pipeline of max and median filters, computes a binary 
+        threshold based on the bottom 5th percentile, performs morphological 
+        opening and closing, and finally finds and draws hierarchical contours 
+        with random colors onto a blanked canvas.
+        
+        Args:
+            image (np.ndarray): The input OpenCV image array (modified in place).
+        """
         # filter parameters
         n_filters = 4
         ksize = 3
@@ -46,10 +57,12 @@ class ContourPyProcessor(PyProcessor, key='cont'):
         for i in range(len(cnts)):
             color = np.random.randint(0, 256)
             cv2.drawContours(image, cnts, i, color, 3, cv2.LINE_8, hier, 0)
-            
-
-    """
-    TODO document name method
-    """
+    
     def get_name(self) -> str:
+        """
+        Retrieves the name of the contour image processor.
+        
+        Returns:
+            str: "Contour Python image processor"
+        """
         return "Contour Python image processor"

@@ -2,14 +2,25 @@ import cv2
 import numpy as np
 from abstract_pyprocessor import PyProcessor
 
-"""
-TODO document FMMorphPyProcessor concrete class
-"""
 class FMMorphPyProcessor(PyProcessor, key='fmm'):
     """
-    TODO document execute method
+    Concrete implementation of PyProcessor executing an FMM pipeline.
+    
+    Applies Filter, Mask, and Morph (FMM) operations to the image. 
+    Registered in the PyProcessor registry under the key 'fmm'.
     """
+
     def execute(self, image: np.ndarray) -> None:
+        """
+        Executes the FMM (Filter-Mask-Morph) processing pipeline in place.
+        
+        Applies max and median filtering, creates an inverted binary mask 
+        based on the bottom 5th percentile, and performs morphological 
+        opening and closing to isolate specific features.
+        
+        Args:
+            image (np.ndarray): The input OpenCV image array (modified in place).
+        """
         # image processing in place (assumes the image passed into the function
         # is a deep-copy)
         
@@ -42,10 +53,12 @@ class FMMorphPyProcessor(PyProcessor, key='fmm'):
             
             # close
             cv2.morphologyEx(image, cv2.MORPH_CLOSE, morph_kernel, dst=image)
-        
     
-    """
-    TODO document name method
-    """
     def get_name(self) -> str:
+        """
+        Retrieves the name of the FMM image processor.
+        
+        Returns:
+            str: "Filter-Mask-Morph (FMM) Python image processor"
+        """
         return "Filter-Mask-Morph (FMM) Python image processor"

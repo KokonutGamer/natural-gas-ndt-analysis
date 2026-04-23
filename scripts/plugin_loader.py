@@ -3,8 +3,13 @@ import importlib
 from pathlib import Path
 
 """
-Scanes the scripts directory for concrete implementations of PyProcessor
+Scans the scripts directory for concrete implementations of PyProcessor.
+
+This module dynamically searches for any Python file ending in 'processor.py' 
+within its own directory and imports it. Doing so triggers the abstract base 
+class's `__init_subclass__` hook, effectively auto-registering the plugins.
 """
+
 # get the directory where this loader script lives
 scripts_dir = Path(__file__).parent
 
