@@ -30,3 +30,6 @@ processed/
 # --- Large Images ---
 *_4656x3496.tiff
 *_4160x3120.tiff
+
+# --- Doxygen ---
+docs/html/
