@@ -1,7 +1,7 @@
 [project]
 name = "natural-gas-ndt-analysis"
 version = "0.1.0"
-description = "Add your description here"
+description = "Image processing for detecting microcracks and micro pits in natural gas pipelines"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -15,3 +15,26 @@ dependencies = [
     "torchaudio>=2.11.0",
     "torchvision>=0.26.0",
 ]
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "UP"]
+
+# Ignore specific rules if they get annoying
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
