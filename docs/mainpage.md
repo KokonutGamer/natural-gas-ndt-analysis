@@ -40,7 +40,7 @@ Thanks to the dynamic plugin loader, you can add new image processing algorithms
 3. **Implement the `execute` and `get_name` methods.**
 4. **Modify the image in-place** (the image is passed as a `numpy.ndarray`).
 
-### Example:
+### Example
 ```Python
 import cv2
 import numpy as np
