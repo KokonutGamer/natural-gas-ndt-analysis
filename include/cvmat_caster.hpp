@@ -9,18 +9,30 @@ namespace pybind11
 {
     namespace detail
     {
-
+        /**
+         * @struct type_caster<cv::Mat>
+         * @brief Custom pybind11 type caster to convert between OpenCV cv::Mat and Python numpy.ndarray.
+         */
         template <>
         struct type_caster<cv::Mat>
         {
         public:
             /**
-             * TODO document macro
+             * @brief Defines the Python type name as "numpy.ndarray" and sets up internal value storage.
              */
             PYBIND11_TYPE_CASTER(cv::Mat, _("numpy.ndarray"));
 
             /**
-             * TODO document load function
+             * @brief Converts a Python numpy.ndarray into a C++ cv::Mat.
+             * 
+             * Reads the buffer information of the provided Python array to determine 
+             * dimensions, strides, channels, and data type (e.g., 8-bit unsigned, 
+             * 32-bit floating point). Wraps the data in a cv::Mat without copying.
+             * 
+             * @param src The Python object handle representing the source array.
+             * @param convert Unused flag indicating whether implicit conversion is allowed.
+             * @return true If the Python object was successfully cast to a cv::Mat.
+             * @return false If the object is not a valid numpy.ndarray or has an unsupported type.
              */
             bool load(handle src, bool convert)
             {
@@ -78,7 +90,18 @@ namespace pybind11
             }
 
             /**
-             * TODO document cast function
+             * @brief Converts a C++ cv::Mat into a Python numpy.ndarray.
+             * 
+             * Maps the OpenCV matrix depths and dimensions to the corresponding 
+             * Python format descriptor strings, shapes, and strides. Attaches a 
+             * capsule to ensure the C++ matrix is correctly deallocated when the 
+             * Python object is garbage collected.
+             * 
+             * @param m The OpenCV matrix (cv::Mat) to convert.
+             * @param return_value_policy Policy regulating how memory should be managed.
+             * @param defval Default value handle (unused).
+             * @return handle A Python handle representing the newly created numpy.ndarray.
+             * @throws std::runtime_error If the cv::Mat has an unsupported depth/type.
              */
             static handle cast(const cv::Mat &m, return_value_policy, handle defval)
             {
