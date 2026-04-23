@@ -1,17 +1,22 @@
 #include "include/cpp_image_processor.h"
 
-cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
+#include <tracy/Tracy.hpp>
+
+cv::Mat CppImageProcessor::execute(const cv::Mat &image, const std::string method) const
 {
-    // copy constructor
-    cv::Mat processedImage = image;
+    // record the function's name, the source file name, and the exact line number
+    ZoneScoped;
+
+    // deep copy of image
+    cv::Mat processedImage = image.clone();
 
     // filter parameters
     int numberOfFilters = 4;
     int kernelSize = 3;
     cv::Mat maxKernel = cv::getStructuringElement(
         cv::MORPH_RECT,
-        cv::Size(2 * kernelSize + 1, 2 * kernelSize + 1),
-        cv::Point(kernelSize, kernelSize));
+        cv::Size(kernelSize, kernelSize),
+        cv::Point(kernelSize / 2, kernelSize / 2));
 
     for (int i = 0; i < numberOfFilters; i++)
     {
@@ -63,8 +68,8 @@ cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
     kernelSize = 5;
     cv::Mat morphKernel = cv::getStructuringElement(
         cv::MORPH_RECT,
-        cv::Size(2 * kernelSize + 1, 2 * kernelSize + 1),
-        cv::Point(kernelSize, kernelSize));
+        cv::Size(kernelSize, kernelSize),
+        cv::Point(kernelSize / 2, kernelSize / 2));
 
     for (int i = 0; i < numberOfMorphs; i++)
     {
@@ -86,7 +91,7 @@ cv::Mat CppImageProcessor::execute(const cv::Mat &image) const
     return processedImage;
 }
 
-std::string CppImageProcessor::getName() const
+std::string CppImageProcessor::getName(const std::string method) const
 {
     return "C++ image processor";
 }

@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 # Load image using OpenCV
 img = cv2.imread("images/scratch_2.tiff")
 
+assert img is not None, "Image could not be loaded. Check the file path."
+
 # Convert to grayscale
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 

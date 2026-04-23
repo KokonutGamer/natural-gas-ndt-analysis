@@ -1,0 +1,39 @@
+name: Deploy Doxygen Documentation
+
+# triggers on push to the main branch
+on:
+  push:
+    branches:
+      - main
+
+# grant permissions to deploy to GitHub Pages
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # check out repo
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # install doxygen and graphviz
+      - name: Install Doxygen and Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz
+
+      # generate HTML
+      - name: Generate Documentation
+        run: doxygen Doxyfile
+
+      # deploy to gh-pages branch
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/html
+          publish_branch: gh-pages
+          force_orphan: true

@@ -2,6 +2,8 @@ import cv2
 
 image = cv2.imread('images/scratch_2.tiff', cv2.IMREAD_GRAYSCALE)
 
+assert image is not None, "Image could not be loaded. Check the file path."
+
 # While sobel is direction, laplacian is not; it uses second-order derivatives instead
 laplacian = cv2.Laplacian(image, cv2.CV_64F, ksize=3)
 
