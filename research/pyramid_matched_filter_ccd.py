@@ -3,7 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 image_names = [
-    "cc-8.tif",
+    "aa-05.tif",
+    "aa-06.tif",
+    "aa-07.tif",
+    "aa-08.tif",
+    "aa-09.tif",
 ]
 
 
@@ -47,7 +51,7 @@ def apply_matched_filter_pyramid(
     threshold: float = 0.50,
 ):
     """
-    Applies the matched filter across a Gaussian pyramid to detect cracks of varying 
+    Applies the matched filter across a Gaussian pyramid to detect cracks of varying
     widths. Returns the binary image, global max response, and a list of intermediate
     step dictionaries for visualization.
     """
@@ -109,48 +113,70 @@ def apply_matched_filter_pyramid(
     return (binary_crack * 255).astype(np.uint8), global_max_response, step_history
 
 
+def ccd(binary_image, min_size=50):
+    """
+    Remove noise by filtering small connected components.
+    """
+    num_lables, labels = cv2.connectedComponents(binary_image)
+
+    cleaned = np.zeros_like(binary_image)
+    for label in range(1, num_lables):
+        component_mask = labels == label
+        if np.sum(component_mask) >= min_size:
+            cleaned[component_mask] = 255
+
+    return cleaned
+
+
 def setup_plot(image_name: str, templates: list[np.ndarray]) -> None:
     """Processes the image and plots a grid showing every step of the pyramid."""
     result_img, global_max, step_history = apply_matched_filter_pyramid(
         image_name, templates, levels=3
     )
 
-    if result_img is not None and global_max is not None and step_history is not None:
-        orig = cv2.imread(f"images/{image_name}", cv2.IMREAD_GRAYSCALE)
+    assert (
+        result_img is not None and global_max is not None and step_history is not None
+    )
 
-        # Determine the number of rows needed
-        num_levels = len(step_history)
-        fig, axes = plt.subplots(num_levels + 1, 3, figsize=(15, 3 * (num_levels + 1)))
+    cleaned = ccd(result_img, 100)
 
-        # Plot each level's intermediate steps
-        for i, step in enumerate(step_history):
-            axes[i, 0].imshow(step["image"], cmap="gray")
-            axes[i, 0].set_title(f"Level {step['level']} - Scaled Image")
-            axes[i, 0].axis("off")
+    orig = cv2.imread(f"images/{image_name}", cv2.IMREAD_COLOR_RGB)
+    assert orig is not None
+    orig[cleaned == 255] = [255, 0, 0] # red
 
-            axes[i, 1].imshow(step["response"], cmap="gray")
-            axes[i, 1].set_title(f"Level {step['level']} - Raw Response")
-            axes[i, 1].axis("off")
+    # Determine the number of rows needed
+    num_levels = len(step_history)
+    _, axes = plt.subplots(num_levels + 1, 3, figsize=(15, 3 * (num_levels + 1)))
 
-            axes[i, 2].imshow(step["upsampled"], cmap="gray")
-            axes[i, 2].set_title(f"Level {step['level']} - Upsampled to Original")
-            axes[i, 2].axis("off")
+    # Plot each level's intermediate steps
+    for i, step in enumerate(step_history):
+        axes[i, 0].imshow(step["image"], cmap="gray")
+        axes[i, 0].set_title(f"Level {step['level']} - Scaled Image")
+        axes[i, 0].axis("off")
 
-        # Plot the final combined results on the bottom row
-        axes[num_levels, 0].imshow(orig, cmap="gray")
-        axes[num_levels, 0].set_title("Original Image")
-        axes[num_levels, 0].axis("off")
+        axes[i, 1].imshow(step["response"], cmap="gray")
+        axes[i, 1].set_title(f"Level {step['level']} - Raw Response")
+        axes[i, 1].axis("off")
 
-        axes[num_levels, 1].imshow(global_max, cmap="gray")
-        axes[num_levels, 1].set_title("Global Max Response (Combined)")
-        axes[num_levels, 1].axis("off")
+        axes[i, 2].imshow(step["upsampled"], cmap="gray")
+        axes[i, 2].set_title(f"Level {step['level']} - Upsampled to Original")
+        axes[i, 2].axis("off")
 
-        axes[num_levels, 2].imshow(result_img, cmap="gray")
-        axes[num_levels, 2].set_title("Final Thresholded Output")
-        axes[num_levels, 2].axis("off")
+    # Plot the final combined results on the bottom row
+    axes[num_levels, 0].imshow(orig, cmap="gray")
+    axes[num_levels, 0].set_title("Original Image")
+    axes[num_levels, 0].axis("off")
 
-        plt.tight_layout()
-        plt.savefig(f"figures/matched-filter/{image_name}_Pyramid.png")
+    axes[num_levels, 1].imshow(global_max, cmap="gray")
+    axes[num_levels, 1].set_title("Global Max Response (Combined)")
+    axes[num_levels, 1].axis("off")
+
+    axes[num_levels, 2].imshow(cleaned, cmap="gray")
+    axes[num_levels, 2].set_title("Final Thresholded Output")
+    axes[num_levels, 2].axis("off")
+
+    plt.tight_layout()
+    plt.savefig(f"figures/matched-filter/{image_name}_Pyramid.png")
 
 
 if __name__ == "__main__":
