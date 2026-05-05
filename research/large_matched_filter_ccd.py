@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 
 image_names = [
     "0098.tif",
-    "0099.tif",
-    "0100.tif",
-    "0101.tif",
-    "0102.tif",
-    "0103.tif",
-    "0104.tif",
-    "0105.tif",
-    "0106.tif",
+    # "0099.tif",
+    # "0100.tif",
+    # "0101.tif",
+    # "0102.tif",
+    # "0103.tif",
+    # "0104.tif",
+    # "0105.tif",
+    # "0106.tif",
 ]
 
 
@@ -77,20 +77,21 @@ def apply_matched_filter(
 
     return (binary_crack * 255).astype(np.uint8), max_response
 
+
 def ccd(binary_image, min_size=50):
     """
     Remove noise by filtering small connected components.
     """
     num_lables, labels = cv2.connectedComponents(binary_image)
-    
+
     cleaned = np.zeros_like(binary_image)
     for label in range(1, num_lables):
-        component_mask = (labels == label)
+        component_mask = labels == label
         if np.sum(component_mask) >= min_size:
             cleaned[component_mask] = 255
-    
+
     return cleaned
-    
+
 
 def setup_plot(
     image_name: str,
@@ -108,13 +109,29 @@ def setup_plot(
 
     if cleaned is None:
         return
-    
+
+    annotated = cv2.imread(
+        f"images/annotated/{image_name[: image_name.find('.')]}.png",
+        cv2.IMREAD_GRAYSCALE,
+    )
+
+    if annotated is not None:
+        annotated[annotated != 0] = 255  # set all non-black pixels to white
+        intersection = cv2.bitwise_and(cleaned, annotated)
+        i = cv2.countNonZero(intersection)
+        union = cv2.bitwise_or(cleaned, annotated)
+        u = cv2.countNonZero(union)
+
+        print(f"Intersection: {i}")
+        print(f"Union: {u}")
+        print(f"IoU: {i / u}")
+
     plt.figure(figsize=(15, 5))
     orig = cv2.imread(f"images/{image_name}", cv2.IMREAD_COLOR_RGB)
 
     assert orig is not None
-    
-    orig[cleaned == 255] = [255, 0, 0] # red
+
+    orig[cleaned == 255] = [255, 0, 0]  # red
 
     plt.subplot(1, 2, 1)
     plt.title(f"Original: {image_name}")
