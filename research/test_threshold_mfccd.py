@@ -3,16 +3,21 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 
 image_directory = "images"
 annotations_directory = "images/annotated"
-sigma_vals = np.linspace(36.0, 72.0, 10)
-L_vals = (sigma_vals * 3 / 2).astype(np.uint8)
+
+# Define the range of thresholds to test (e.g., from 0.1 to 0.99 in 50 steps)
+threshold_vals = np.linspace(0.1, 0.99, 50)
 
 
-def setup_plot(image: str, annotated: str, templates: list[np.ndarray]) -> float | None:
+def setup_plot(
+    image: str, annotated: str, templates: list[np.ndarray], threshold: float
+) -> float | None:
     """
-    Process each image and graphs IoU with the annotated image.
+    Process each image and returns IoU with the annotated image for a specific
+    threshold.
     """
     img = cv2.imread(f"{image_directory}/{image}", cv2.IMREAD_GRAYSCALE)
 
@@ -20,10 +25,7 @@ def setup_plot(image: str, annotated: str, templates: list[np.ndarray]) -> float
         print(f"Could not load {image}. Skipping.")
         return None
 
-    # TODO
-    # we should consider adjusting the thresholds and seeing which thresholds work best
-    # potentially base this threshold off of the histogram!
-    result = matched_filter(img, templates)
+    result = matched_filter(img, templates, threshold=threshold)
 
     if result is None:
         print("Matched filter returned None.")
@@ -56,35 +58,22 @@ def generate_kernels(
     h_x = int(np.ceil(3 * sigma))
     h_y = int(np.ceil(L / 2))
     size = max(h_x, h_y) + 2
-    # kernels SHOULD BE SQUARE, so the max size is defined either by 3 * sigma or L / 2
-    # according to the original research paper
 
-    # we use a meshgrid so we can efficiently slice existing coordinates from -size to
-    # size + 1; THIS STILL RESULTS IN AN ODD BY ODD MATRIX!
     y, x = np.mgrid[-size : size + 1, -size : size + 1]
 
     for angle in range(0, 180, angle_step):
         theta = np.deg2rad(angle)
 
-        # notice that the rotations for x and y are swapped
-        # this is because we are using rows as y and cols as x
         x_rot = x * np.cos(theta) - y * np.sin(theta)
         y_rot = x * np.sin(theta) + y * np.cos(theta)
 
-        # mask should only contain values within the 3 * sigma range (for x) and L / 2
-        # range (for y)
         mask = (np.abs(x_rot) <= 3 * sigma) & (np.abs(y_rot) <= L / 2)
 
         kernel = np.zeros_like(x, dtype=np.float32)
-
-        # 1D NEGATIVE Gaussian in x (trough / valley)
         kernel[mask] = -np.exp(-(x_rot[mask] ** 2) / (2 * sigma**2))
 
         mean_val = np.mean(kernel[mask])
-        kernel[mask] = kernel[mask] - mean_val  # IMPORTANT for zero-mean
-        # zero-mean Gaussians are Gaussians whose total value adds up to zero
-        # this is because mean * number of elements = sum of elements in kernel
-        # zero-mean filters are important to maintain gray-value intensity
+        kernel[mask] = kernel[mask] - mean_val
 
         templates.append(kernel)
 
@@ -97,23 +86,19 @@ def matched_filter(
     """
     Applies all matched filter templates to an image and thresholds the response.
     """
-    # TODO
-    # we should look into the size of this kernel
-    # should it be 5x5? should we try a BIGGER kernel?
-    # maybe downsample the image instead?
     img_blur = cv2.blur(img, (5, 5)).astype(np.float32)
     max_response = np.zeros_like(img_blur)
 
     for kernel in templates:
         response = cv2.filter2D(img_blur, cv2.CV_32F, kernel)
-
-        # we update the max response to the maximum of ALL kernel convolutions
         max_response = np.maximum(max_response, response)
 
     dst_array = np.zeros_like(max_response)
     normalized_response = cv2.normalize(
         max_response, dst_array, 0.0, 1.0, cv2.NORM_MINMAX
     )
+
+    # Use the threshold passed into the function
     _, binary_crack = cv2.threshold(
         normalized_response, threshold, 1.0, cv2.THRESH_BINARY
     )
@@ -155,53 +140,77 @@ def calc_iou(response: np.ndarray, ground_truth: np.ndarray) -> float:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="Test IoU with Matched Filter and CCD",
-        description="Tests the Intersection over Union using a combination of scale and"
-        " crack length",
+        description="Tests the Intersection over Union against different matched filter"
+        " thresholds.",
+    )
+    parser.add_argument("image", help="Image name")
+    parser.add_argument("annotated", help="Annotated image name")
+    parser.add_argument(
+        "--sigma",
+        type=float,
+        default=52.0,
+        help="Fixed sigma (scale) for the matched filter kernels",
     )
     parser.add_argument(
-        "image",
-        help="Image name",
-    )
-    parser.add_argument(
-        "annotated",
-        help="Annotated image name",
+        "--L",
+        type=int,
+        default=54,
+        help="Fixed L (crack length) for the matched filter kernels",
     )
     parser.add_argument(
         "--values",
-        help="only retrieve IoU results from scale-length combinations",
+        help="Only retrieve IoU results and save to CSV (no graph)",
         action="store_true",
     )
+
     args = parser.parse_args()
 
-    sigma_mesh, L_mesh = np.meshgrid(sigma_vals, L_vals)
-    IoU_mesh = np.zeros_like(sigma_mesh, dtype=np.float32)
+    # Optimization: Generate templates ONCE outside the loop since sigma and L are fixed
+    print(f"Generating kernels with sigma={args.sigma}, L={args.L}...")
+    templates = generate_kernels(sigma=args.sigma, L=args.L)
 
-    for i in range(sigma_mesh.shape[0]):
-        for j in range(sigma_mesh.shape[1]):
-            current_sigma = sigma_mesh[i, j]
-            current_L = int(L_mesh[i, j])
-            templates = generate_kernels(sigma=current_sigma, L=current_L)
-            IoU_mesh[i, j] = setup_plot(args.image, args.annotated, templates)
+    iou_results = []
+
+    print("Evaluating thresholds...")
+    for thresh in threshold_vals:
+        iou = setup_plot(args.image, args.annotated, templates, threshold=thresh)
+        # Handle cases where IoU might be None (e.g., missing images)
+        iou_results.append(iou if iou is not None else 0.0)
 
     if not args.values:
-        fig = plt.figure(figsize=(10, 7))
-        ax = fig.add_subplot(111, projection="3d")
-        surf = ax.plot_surface(
-            sigma_mesh, L_mesh, IoU_mesh, cmap="viridis", linewidth=0, antialiased=True
+        # Create a 2D line plot
+        plt.figure(figsize=(10, 6))
+        plt.plot(threshold_vals, iou_results, marker=".", linestyle="-", color="b")
+
+        plt.title(f"IoU vs Filter Threshold (sigma={args.sigma}, L={args.L})")
+        plt.xlabel("Threshold Level")
+        plt.ylabel("Intersection over Union (IoU)")
+        plt.grid(True, linestyle="--", alpha=0.7)
+
+        # Highlight the maximum IoU value found
+        max_iou_idx = np.argmax(iou_results)
+        plt.plot(
+            threshold_vals[max_iou_idx],
+            iou_results[max_iou_idx],
+            "ro",
+            label=f"Max IoU: {iou_results[max_iou_idx]:.3f} @ Thresh: "
+            f"{threshold_vals[max_iou_idx]:.2f}",
         )
+        plt.legend()
 
-        ax.set_title("IoU based on Sigma and L")
-        ax.set_xlabel("Sigma (Scale)")
-        ax.set_ylabel("L (Crack Length)")
-        ax.set_zlabel("Intersection over Union")
-
-        fig.colorbar(surf, shrink=0.5, aspect=5, label="IoU")
+        plt.tight_layout()
         plt.show()
 
     else:
-        df = pd.DataFrame(IoU_mesh, columns=sigma_vals, index=L_vals)
+        df = pd.DataFrame({"Threshold": threshold_vals, "IoU": iou_results})
         print(df)
-        df.to_csv(
-            f"figures/matched-filter-iou-graph/{args.image[: args.image.find('.')]}_iou"
-            "-values.csv"
+
+        # Ensure the output directory exists
+        out_dir = "figures/matched-filter-iou-graph"
+        os.makedirs(out_dir, exist_ok=True)
+
+        csv_filename = (
+            f"{out_dir}/{args.image[: args.image.find('.')]}_threshold_iou_values.csv"
         )
+        df.to_csv(csv_filename, index=False)
+        print(f"Saved results to {csv_filename}")

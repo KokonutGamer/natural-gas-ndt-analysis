@@ -142,7 +142,7 @@ def setup_plot(image_name: str, templates: list[np.ndarray]) -> None:
 
     orig = cv2.imread(f"images/{image_name}", cv2.IMREAD_COLOR_RGB)
     assert orig is not None
-    orig[cleaned == 255] = [255, 0, 0] # red
+    orig[cleaned == 255] = [255, 0, 0]  # red
 
     # Determine the number of rows needed
     num_levels = len(step_history)

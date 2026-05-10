@@ -8,6 +8,7 @@ lib/
 compile_commands.json
 
 # --- Python ---
+.ipynb_checkpoints/
 __pycache__/
 *.py[cod]
 *.egg-info/

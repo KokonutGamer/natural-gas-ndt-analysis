@@ -5,7 +5,10 @@ description = "Image processing for detecting microcracks and micro pits in natu
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "ipykernel>=7.2.0",
+    "jupyter>=1.1.1",
     "matplotlib>=3.10.8",
+    "notebook>=7.5.6",
     "numpy>=2.4.2",
     "onnxscript>=0.6.2",
     "opencv-python>=4.13.0.92",
@@ -39,3 +42,8 @@ ignore = []
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.2.0",
+]
