@@ -17,7 +17,7 @@ class PyProcessor(ABC):
     Populated automatically via the `__init_subclass__` hook.
     """
 
-    def __init_subclass__(cls, key=None, **kwargs) -> None:
+    def __init_subclass__(cls, key=None, register=True, **kwargs) -> None:
         """
         Hook that is called whenever a subclass is created.
 
@@ -29,6 +29,11 @@ class PyProcessor(ABC):
                                  Defaults to None (uses class name).
         """
         super().__init_subclass__(**kwargs)
+
+        # skip intermediates (ABCs)
+        if not register:
+            return
+
         if key is not None:
             cls._registry[key] = cls
         else:
@@ -80,7 +85,8 @@ class PyProcessor(ABC):
             ValueError: If the requested key does not exist in the registry.
         """
         if key in cls._registry:
-            cls._registry[key].execute(cls._registry[key], image)
+            processor_instance = cls._registry[key]()
+            processor_instance.execute(image)
         else:
             raise ValueError(f'Processor with key "{key}" does not exist.')
 
