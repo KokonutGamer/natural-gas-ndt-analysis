@@ -1,4 +1,5 @@
 import numpy as np
+from sklearn.metrics import roc_auc_score, average_precision_score
 
 
 def iou(response: np.ndarray, ground_truth: np.ndarray) -> float:
@@ -120,3 +121,84 @@ def recall(response: np.ndarray, ground_truth: np.ndarray) -> float:
 
     tp = np.logical_and(res_bool, gt_bool).sum()
     return float(tp / gt_bool.sum())
+
+
+def soft_iou(response: np.ndarray, ground_truth: np.ndarray) -> float:
+    """
+    Calculates Soft Intersection over Union (IoU) using continuous probabilities.
+    Assumes response contains float values in the range [0.0, 1.0].
+    """
+    assert response.shape != 0 and ground_truth.shape != 0, (
+        "Response and ground truth must have size larger than 0."
+    )
+    assert response.shape == ground_truth.shape, (
+        "Response and ground truth shape do not match."
+    )
+
+    gt_float = (ground_truth > 0).astype(np.float32)
+
+    intersection = np.sum(response * gt_float)
+    union = np.sum(response) + np.sum(gt_float) - intersection
+
+    if union == 0.0:
+        return 0.0
+    return float(intersection / union)
+
+
+def soft_dice(response: np.ndarray, ground_truth: np.ndarray) -> float:
+    """
+    Calculates Soft Dice using continuous probabilities. Assumes response contains float
+    values in the range [0.0, 1.0].
+    """
+    assert response.shape != 0 and ground_truth.shape != 0, (
+        "Response and ground truth must have size larger than 0."
+    )
+    assert response.shape == ground_truth.shape, (
+        "Response and ground truth shape do not match."
+    )
+
+    gt_float = (ground_truth > 0).astype(np.float32)
+
+    intersection = np.sum(response * gt_float)
+    total_area = np.sum(response) + np.sum(ground_truth)
+
+    if total_area == 0.0:
+        return 0.0
+    return float(2 * intersection / total_area)
+
+
+def roc_auc(response: np.ndarray, ground_truth: np.ndarray) -> float:
+    """
+    Calculates Receiver Operating Characteristic - Area Under Curve (ROC-AUC). Evaluates
+    the tradeoff between True Positive Rate and False Positive Rate across all threshold
+    levels.
+    """
+    assert response.shape != 0 and ground_truth.shape != 0, (
+        "Response and ground truth must have size larger than 0."
+    )
+    assert response.shape == ground_truth.shape, (
+        "Response and ground truth shape do not match."
+    )
+
+    gt_flat = (ground_truth > 0).astype(np.int8).flatten()
+    res_flat = response.flatten()
+
+    return float(roc_auc_score(gt_flat, res_flat))
+
+
+def pr_auc(response: np.ndarray, ground_truth: np.ndarray) -> float:
+    """
+    Calculates Precision-Recall - Area Under Curve (PR-AUC) using Average Precision.
+    Highly recommended for heavily imbalanced datasets (like microcracks).
+    """
+    assert response.shape != 0 and ground_truth.shape != 0, (
+        "Response and ground truth must have size larger than 0."
+    )
+    assert response.shape == ground_truth.shape, (
+        "Response and ground truth shape do not match."
+    )
+
+    gt_flat = (ground_truth > 0).astype(np.int8).flatten()
+    res_flat = response.flatten()
+
+    return float(average_precision_score(gt_flat, res_flat))

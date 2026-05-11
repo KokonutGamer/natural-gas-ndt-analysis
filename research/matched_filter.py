@@ -60,16 +60,14 @@ def apply_matched_filter(
         # we update the max response to the maximum of ALL kernel convolutions
         max_response = np.maximum(max_response, response)
 
-    dst_array = np.zeros_like(max_response)
-    normalized_response = cv2.normalize(
-        max_response, dst_array, 0.0, 1.0, cv2.NORM_MINMAX
-    )
+    normalized_response = np.zeros_like(max_response)
+    cv2.normalize(max_response, normalized_response, 0.0, 1.0, cv2.NORM_MINMAX)
 
     _, binary_crack = cv2.threshold(
         normalized_response, threshold, 1.0, cv2.THRESH_BINARY
     )
 
-    return (binary_crack * 255).astype(np.uint8), max_response
+    return (binary_crack * 255).astype(np.uint8), normalized_response
 
 
 def apply_matched_filter_from_path(
@@ -111,13 +109,8 @@ def apply_pyramid_matched_filter(
         global_response = np.maximum(global_response, upsampled)
         curr = cv2.pyrDown(curr)
 
-    min_val = np.min(global_response)
-    max_val = np.max(global_response)
-
-    if max_val > min_val:
-        normalized_response = (global_response - min_val) / (max_val - min_val)
-    else:
-        normalized_response = np.zeros_like(global_response)
+    normalized_response = np.zeros_like(global_response)
+    cv2.normalize(global_response, normalized_response, 0.0, 1.0, cv2.NORM_MINMAX)
 
     _, binary_crack = cv2.threshold(
         normalized_response, threshold, 1.0, cv2.THRESH_BINARY
