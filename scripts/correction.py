@@ -1,5 +1,5 @@
 import numpy as np
-
+from scipy.special import expit
 
 def apply_gamma_correction(response: np.ndarray, gamma: float = 2.0) -> np.ndarray:
     """
@@ -25,7 +25,7 @@ def apply_sigmoid_stretch(
     steepness: How aggressive the suppression/accentuation is.
     """
     # Apply the logistic function
-    transformed = 1.0 / (1.0 + np.exp(-steepness * (response - midpoint)))
+    transformed = expit(steepness * (response - midpoint))
 
     # Normalize back to [0, 1] bounds just in case the tails were clipped
     transformed = (transformed - np.min(transformed)) / (

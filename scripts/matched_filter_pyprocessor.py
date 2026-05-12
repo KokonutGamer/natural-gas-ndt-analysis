@@ -74,7 +74,10 @@ class MatchedFilterPyProcessor(BaseMatchedFilter, key="mfccd"):
 class MFGammaPyProcessor(BaseMatchedFilter, key="mfgamma"):
     def __init__(self) -> None:
         components: strat.PipelineComponents = (
-            BaseMatchedFilter.builder().corrector(strat.GammaCorrector()).components
+            BaseMatchedFilter.builder()
+            .corrector(strat.GammaCorrector())
+            .thresholder(strat.BinaryThresholder(threshold=0.25))
+            .components
         )
         super().__init__(**components)
 
