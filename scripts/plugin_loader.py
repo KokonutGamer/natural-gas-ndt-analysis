@@ -24,7 +24,7 @@ for script_path in scripts_dir.glob("*processor.py"):
 
     try:
         # dynamically import the module
-        importlib.import_module(module_name)
+        importlib.import_module(f".{module_name}", package=__package__)
         print(f"Successfully loaded plugin: {module_name}")
     except Exception as e:
         print(f"Failed to load plugin {module_name}: {e}", file=sys.stderr)

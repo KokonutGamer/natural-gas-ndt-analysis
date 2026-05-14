@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from abstract_pyprocessor import PyProcessor
+from .abstract_pyprocessor import PyProcessor
 
 
 class ContourPyProcessor(PyProcessor, key="cont"):

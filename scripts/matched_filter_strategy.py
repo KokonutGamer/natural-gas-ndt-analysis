@@ -1,5 +1,5 @@
 from abc import abstractmethod
-import correction
+from . import correction
 import cv2
 import numpy as np
 from skimage.filters import apply_hysteresis_threshold

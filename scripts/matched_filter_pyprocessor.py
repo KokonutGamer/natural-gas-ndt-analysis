@@ -1,7 +1,7 @@
 import numpy as np
-from abstract_pyprocessor import PyProcessor
+from .abstract_pyprocessor import PyProcessor
 from abc import ABC
-import matched_filter_strategy as strat
+from . import matched_filter_strategy as strat
 
 
 class BaseMatchedFilter(PyProcessor, ABC, register=False):
