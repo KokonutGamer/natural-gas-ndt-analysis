@@ -7,12 +7,7 @@ def apply_gamma_correction(response: np.ndarray, gamma: float = 2.0) -> np.ndarr
     normalized between 0.0 and 1.0.
     """
     # Simply raise the entire matrix to the power of gamma
-    transformed = np.power(response, gamma)
-
-    # Re-normalize to ensure the absolute max peak is stretched back to exactly 1.0
-    transformed = transformed / np.max(transformed)
-
-    return transformed
+    return np.power(response, gamma)
 
 
 def apply_sigmoid_stretch(
@@ -25,11 +20,4 @@ def apply_sigmoid_stretch(
     steepness: How aggressive the suppression/accentuation is.
     """
     # Apply the logistic function
-    transformed = expit(steepness * (response - midpoint))
-
-    # Normalize back to [0, 1] bounds just in case the tails were clipped
-    transformed = (transformed - np.min(transformed)) / (
-        np.max(transformed) - np.min(transformed)
-    )
-
-    return transformed
+    return expit(steepness * (response - midpoint))

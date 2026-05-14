@@ -21,10 +21,10 @@ class BaseMatchedFilter(PyProcessor, ABC, register=False):
 
     def execute(self, image: np.ndarray) -> None:
         processed = self.preprocessor.process(image)
-        processed = self.matcher.filter(processed)
-        processed = self.corrector.correct(processed)
-        processed = self.thresholder.apply(processed)
-        image[:] = self.denoiser.denoise(processed)
+        filtered = self.matcher.filter(processed)
+        corrected = self.corrector.correct(filtered)
+        thresholded = self.thresholder.apply(corrected)
+        image[:] = self.denoiser.denoise(thresholded)
 
     @staticmethod
     def builder():
@@ -70,6 +70,22 @@ class MatchedFilterPyProcessor(BaseMatchedFilter, key="mfccd"):
     def get_name(self) -> str:
         return "Matched Filter Python image processor"
 
+
+class SmallMFPyProcessor(BaseMatchedFilter, key="smf"):
+    def __init__(self) -> None:
+        components: strat.PipelineComponents = (
+            BaseMatchedFilter.builder()
+            .preprocessor(strat.GaussianBlur())
+            .matcher(strat.GaussianMatcher(sigma=4.0, L=24))
+            .corrector(strat.SigmoidStretcher(steepness=2.0))
+            .thresholder(strat.HysteresisThresholder())
+            .denoiser(strat.ConnectedComponentDenoiser(0.01))
+            .components
+        )
+        super().__init__(**components)
+
+    def get_name(self) -> str:
+        return "Small Matched Filter Python image processor"
 
 class MFGammaPyProcessor(BaseMatchedFilter, key="mfgamma"):
     def __init__(self) -> None:

@@ -44,6 +44,17 @@ class BoxBlur(PreProcessor):
         return cv2.blur(image, (self._ksize, self._ksize)).astype(np.float32)
 
 
+class GaussianBlur(PreProcessor):
+    def __init__(self, ksize: int = 11, sigma: float = 3.0) -> None:
+        self._ksize = ksize
+        self._sigma = sigma
+
+    def process(self, image: np.ndarray) -> np.ndarray:
+        return cv2.GaussianBlur(image, (self._ksize, self._ksize), self._sigma).astype(
+            np.float32
+        )
+
+
 class GaussianMatcher(Matcher):
     def __init__(self, sigma: float = 44.0, L: int = 54, angle_step: int = 15) -> None:
         self.templates = []
@@ -160,7 +171,7 @@ class ConnectedComponentDenoiser(Denoiser):
                 continue
             cleaned[mask] = 255
 
-        return cleaned
+        return cleaned.astype(np.uint8)
 
 
 class PipelineComponents(TypedDict):
