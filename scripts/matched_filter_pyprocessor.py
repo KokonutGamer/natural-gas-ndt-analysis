@@ -87,6 +87,7 @@ class SmallMFPyProcessor(BaseMatchedFilter, key="smf"):
     def get_name(self) -> str:
         return "Small Matched Filter Python image processor"
 
+
 class MFGammaPyProcessor(BaseMatchedFilter, key="mfgamma"):
     def __init__(self) -> None:
         components: strat.PipelineComponents = (
@@ -151,3 +152,16 @@ class MFHystSigmoidPyProcessor(BaseMatchedFilter, key="mfhsigmoid"):
 
     def get_name(self) -> str:
         return "Matched Filter Hysteresis (Sigmoid Stretched) Python image processor"
+
+
+class PyramidMFPyProcessor(BaseMatchedFilter, key="pmf"):
+    def __init__(self) -> None:
+        components: strat.PipelineComponents = (
+            BaseMatchedFilter.builder()
+            .matcher(strat.PyramidGaussianMatcher())
+            .components
+        )
+        super().__init__(**components)
+
+    def get_name(self) -> str:
+        return "Pyramid Matched Filter Python image processor"

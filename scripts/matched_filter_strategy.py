@@ -104,6 +104,34 @@ class GaussianMatcher(Matcher):
         return max_response
 
 
+class PyramidGaussianMatcher(GaussianMatcher):
+    def __init__(
+        self, sigma: float = 8.0, L: int = 48, angle_step: int = 15, levels: int = 3
+    ) -> None:
+        self._levels = levels
+        super().__init__(sigma, L, angle_step)
+
+    def filter(self, image: np.ndarray) -> np.ndarray:
+        shape = image.shape
+        global_response = np.zeros(shape, dtype=np.float32)
+        curr = image
+
+        for level in range(self._levels):
+            response = super().filter(curr)
+
+            if level > 0:
+                upsampled = cv2.resize(
+                    response, shape[::-1], interpolation=cv2.INTER_LINEAR
+                )
+            else:
+                upsampled = response
+
+            global_response = np.maximum(global_response, upsampled)
+            curr = cv2.pyrDown(curr)
+
+        return global_response
+
+
 class Normalizer(Corrector):
     def correct(self, image: np.ndarray) -> np.ndarray:
         normalized_response = np.zeros_like(image)
