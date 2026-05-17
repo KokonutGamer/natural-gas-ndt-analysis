@@ -48,6 +48,7 @@ def compare(
     images_directory: str = "../images/",
     annotations_directory: str = "../images/annotated/",
     processed_directory: str = "../processed/",
+    output_directory: str = "output",
 ) -> None:
     image = cv2.imread(images_directory + image_path, cv2.IMREAD_COLOR_RGB)
     assert image is not None
@@ -86,7 +87,8 @@ def compare(
 
     plt.tight_layout()
     plt.savefig(
-        f"{processed_directory}best/{method}_{image_path[: image_path.find('.')]}_"
+        f"{processed_directory}{output_directory}/{method}_"
+        f"{image_path[: image_path.find('.')]}_"
         "comparison.png"
     )
     plt.close(fig)
