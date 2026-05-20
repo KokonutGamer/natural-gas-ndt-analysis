@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   // set up the static image for processing
   cv::Mat image;
   try {
-    std::filesystem::path imagePath = imageDirectory / "two_vertical_and_horizontal.tiff";
+    std::filesystem::path imagePath = imageDirectory / "0070.bmp";
 
     image = cv::imread(imagePath, cv::ImreadModes::IMREAD_GRAYSCALE);
 

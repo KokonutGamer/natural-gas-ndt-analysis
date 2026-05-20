@@ -10,13 +10,13 @@ PyImageProcessor::PyImageProcessor() {
 
   // import the sys module and add project root directory
   py::module_ sys = py::module_::import("sys");
-  sys.attr("path").attr("append")(PROJECT_ROOT_DIR "/scripts");
+  sys.attr("path").attr("append")(PROJECT_ROOT_DIR);
 
   // import all concrete implementations of the abstract base class
-  py::module_::import("plugin_loader");
+  py::module_::import("scripts.plugin_loader");
 
   // setup abstract base class bindings
-  py::object abc = py::module_::import("abstract_pyprocessor").attr("PyProcessor");
+  py::object abc = py::module_::import("scripts.abstract_pyprocessor").attr("PyProcessor");
   this->dispatchExecute = abc.attr("dispatch_execute");
   this->dispatchName = abc.attr("dispatch_name");
 
