@@ -17,8 +17,7 @@ int main(int argc, char *argv[]) {
                                                  "micropits on the Raspberry Pi 5");
 
   options.add_options()("p,python", "Run with the embedded Python interpreter")("h,help", "Print usage")(
-      "i,image", "Process an image",
-      cxxopts::value<std::string>()->default_value("./images/0070.bmp"))(
+      "i,image", "Process an image", cxxopts::value<std::string>()->default_value("./images/0070.bmp"))(
       "o,output", "Output the processed image to a file",
       cxxopts::value<std::string>()->default_value("./processed/test_result.png"))(
       "a,algorithm", "Python algorithm used for processing the image",

@@ -24,8 +24,7 @@ public:
   /**
    * @brief Deleted copy and move semantics.
    *
-   * Ensures proper memory management and prevents object slicing
-   * when dealing with polymorphic subclasses.
+   * Ensures processors are unique and non-shareable.
    */
   ImageProcessor(const ImageProcessor &) = delete;
   ImageProcessor &operator=(const ImageProcessor &) = delete;
