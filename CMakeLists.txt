@@ -1,4 +1,4 @@
-# Requiers CMake version 3.23+
+# Requires CMake version 3.23+
 cmake_minimum_required(VERSION 3.23)
 
 # Project metadata
