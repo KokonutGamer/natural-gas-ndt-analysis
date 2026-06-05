@@ -11,68 +11,64 @@
 #include <string>
 #include <vector>
 
-int main(int argc, char *argv[])
-{
-    cxxopts::Options options("NDT Image Analyzer", "Non-destructive testing "
-                                                   "image processing software developed for detecting microcracks and "
-                                                   "micropits on the Raspberry Pi 5");
+int main(int argc, char *argv[]) {
+  cxxopts::Options options("NDT Image Analyzer", "Non-destructive testing "
+                                                 "image processing software developed for detecting microcracks and "
+                                                 "micropits on the Raspberry Pi 5");
 
-    options.add_options()("p,python", "Run with the embedded Python interpreter")("h,help", "Print usage")("i,image", "Process an image", cxxopts::value<std::string>()->default_value("./images/two_vertical_and_horizontal.tiff"))("o,output", "Output the processed image to a file", cxxopts::value<std::string>()->default_value("./processed/p_two_vertical_and_horizontal.tiff"))("a,algorithm", "Python algorithm used for processing the image", cxxopts::value<std::string>()->default_value("fmm"));
+  options.add_options()("p,python", "Run with the embedded Python interpreter")("h,help", "Print usage")(
+      "i,image", "Process an image", cxxopts::value<std::string>()->default_value("./images/0070.bmp"))(
+      "o,output", "Output the processed image to a file",
+      cxxopts::value<std::string>()->default_value("./processed/test_result.png"))(
+      "a,algorithm", "Python algorithm used for processing the image",
+      cxxopts::value<std::string>()->default_value("fmm"));
 
-    auto result = options.parse(argc, argv);
+  auto result = options.parse(argc, argv);
 
-    // return early on help
-    if (result.count("help"))
-    {
-        std::cout << options.help() << std::endl;
-        return EXIT_SUCCESS;
-    }
-
-    std::unique_ptr<ImageProcessor> processor;
-    if (result["python"].as<bool>())
-    {
-        processor = std::make_unique<PyImageProcessor>();
-    }
-    else
-    {
-        processor = std::make_unique<CppImageProcessor>();
-    }
-
-    // try accessing the input image first
-    try
-    {
-        // sanitize the image path and check if it exists
-        std::filesystem::path imagePath = std::filesystem::canonical(result["image"].as<std::string>());
-
-        // read from the image
-        cv::Mat image = cv::imread(imagePath, cv::ImreadModes::IMREAD_GRAYSCALE);
-
-        // check if read was successful
-        if (image.empty())
-        {
-            std::cerr << "Failed to read from " << result["image"].as<std::string>() << std::endl;
-            return EXIT_FAILURE;
-        }
-
-        // process the image using the specified processor
-        cv::Mat processedImage = processor->execute(image, result["algorithm"].as<std::string>());
-
-        // check if processing was successful
-        if (processedImage.empty())
-        {
-            std::cerr << "Failed to process image" << std::endl;
-            return EXIT_FAILURE;
-        }
-
-        // write the image to a new file
-        cv::imwrite(result["output"].as<std::string>(), processedImage);
-    }
-    catch (const std::filesystem::filesystem_error &e)
-    {
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    std::cout << processor->getName(result["algorithm"].as<std::string>()) << " processed " << result["image"].as<std::string>() << " to " << result["output"].as<std::string>() << std::endl;
+  // return early on help
+  if (result.count("help")) {
+    std::cout << options.help() << std::endl;
     return EXIT_SUCCESS;
+  }
+
+  std::unique_ptr<ImageProcessor> processor;
+  if (result["python"].as<bool>()) {
+    processor = std::make_unique<PyImageProcessor>();
+  } else {
+    processor = std::make_unique<CppImageProcessor>();
+  }
+
+  // try accessing the input image first
+  try {
+    // sanitize the image path and check if it exists
+    std::filesystem::path imagePath = std::filesystem::canonical(result["image"].as<std::string>());
+
+    // read from the image
+    cv::Mat image = cv::imread(imagePath, cv::ImreadModes::IMREAD_GRAYSCALE);
+
+    // check if read was successful
+    if (image.empty()) {
+      std::cerr << "Failed to read from " << result["image"].as<std::string>() << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    // process the image using the specified processor
+    cv::Mat processedImage = processor->execute(image, result["algorithm"].as<std::string>());
+
+    // check if processing was successful
+    if (processedImage.empty()) {
+      std::cerr << "Failed to process image" << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    // write the image to a new file
+    cv::imwrite(result["output"].as<std::string>(), processedImage);
+  } catch (const std::filesystem::filesystem_error &e) {
+    std::cerr << e.what() << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::cout << processor->getName(result["algorithm"].as<std::string>()) << " processed "
+            << result["image"].as<std::string>() << " to " << result["output"].as<std::string>() << std::endl;
+  return EXIT_SUCCESS;
 }

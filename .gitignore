@@ -8,6 +8,7 @@ lib/
 compile_commands.json
 
 # --- Python ---
+.ipynb_checkpoints/
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -26,10 +27,6 @@ figures/
 processed/
 *.onnx
 *.onnx.data
-
-# --- Large Images ---
-*_4656x3496.tiff
-*_4160x3120.tiff
 
 # --- Doxygen ---
 docs/html/

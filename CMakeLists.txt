@@ -1,4 +1,4 @@
-# Requiers CMake version 3.23+
+# Requires CMake version 3.23+
 cmake_minimum_required(VERSION 3.23)
 
 # Project metadata
@@ -10,8 +10,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)     # C++ version required
 set(CMAKE_CXX_VISIBILITY_PRESET hidden) # Set default visibility to hidden
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)  # Ensure that inline functions also have hidden visibility
 
-# Used for C/C++ IntelliSense
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# Set binaries
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
 
 # Dependencies
 include(FetchContent)
@@ -77,14 +79,14 @@ add_library(imgproc_core ${CORE_SRCS})
 target_include_directories(imgproc_core PUBLIC .) # root for relative imports
 target_include_directories(imgproc_core PUBLIC ${tracy_SOURCE_DIR}/public)
 target_link_libraries(imgproc_core PUBLIC pybind11::embed ${OpenCV_LIBS})
-target_compile_definitions(imgproc_core PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
+target_compile_definitions(imgproc_core PRIVATE "PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 
 # Profiled core library for main executable
 add_library(imgproc_core_tracy ${CORE_SRCS})
 target_include_directories(imgproc_core_tracy PUBLIC .) # root for relative imports
 target_link_libraries(imgproc_core_tracy PUBLIC pybind11::embed ${OpenCV_LIBS} TracyClient)
 target_compile_definitions(imgproc_core_tracy PUBLIC TRACY_ENABLE)
-target_compile_definitions(imgproc_core_tracy PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
+target_compile_definitions(imgproc_core_tracy PRIVATE "PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 find_package(Threads REQUIRED)
 target_link_libraries(imgproc_core_tracy PUBLIC Threads::Threads ${CMAKE_DL_LIBS})
 
@@ -106,13 +108,4 @@ gtest_discover_tests(unit_tests)
 # Benchmarks with Google benchmark
 add_executable(benchmarks benchmark/image_processing_benchmark.cc)
 target_link_libraries(benchmarks PRIVATE imgproc_core benchmark::benchmark_main)
-target_compile_definitions(benchmarks PRIVATE PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
-
-# Install the main binary
-install(TARGETS imgproc DESTINATION bin)
-
-# Determine the python version for the installation path
-set(PYTHON_INSTALL_DIR "lib/python${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}/site-packages")
-
-# Install scripts to the relative path
-install(DIRECTORY scripts DESTINATION ${PYTHON_INSTALL_DIR})
+target_compile_definitions(benchmarks PRIVATE "PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
