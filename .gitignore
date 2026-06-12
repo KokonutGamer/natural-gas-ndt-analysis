@@ -17,6 +17,7 @@ __pycache__/
 venv/
 
 # --- IDEs & OS ---
+.vs/
 .vscode/
 .idea/
 .DS_Store
