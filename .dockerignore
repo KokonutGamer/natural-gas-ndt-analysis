@@ -1,7 +1,44 @@
+# --- Git ---
+.git/
+.github/
+.gitignore
+.gitattributes
+.gitmodules
+
+# --- Build Artifacts ---
+.cache/
 build/
+bin/
+lib/
+out/
+*.so
+*.o
+*.a
+compile_commands.json
+
+# --- Python ---
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# --- IDEs ---
+.vs/
+.vscode/
+*.swp
+*.suo
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Misc ---
 docs/
+figures/
+images/
 processed/
 research/
-.git/
-.venv/
-.vscode/
+*.onnx
+*.onnx.data

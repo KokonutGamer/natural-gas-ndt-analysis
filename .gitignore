@@ -1,7 +1,9 @@
-# --- Build Artifacts (CMake & C++) ---
+# --- Build Artifacts ---
+.cache/
 build/
 bin/
 lib/
+out/
 *.so
 *.o
 *.a
@@ -16,9 +18,11 @@ __pycache__/
 .venv/
 venv/
 
-# --- IDEs & OS ---
+# --- IDEs ---
 .vs/
 .vscode/
+*.swp
+*.suo
 .idea/
 .DS_Store
 Thumbs.db
