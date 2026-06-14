@@ -79,14 +79,14 @@ add_library(imgproc_core ${CORE_SRCS})
 target_include_directories(imgproc_core PUBLIC .) # root for relative imports
 target_include_directories(imgproc_core PUBLIC ${tracy_SOURCE_DIR}/public)
 target_link_libraries(imgproc_core PUBLIC pybind11::embed ${OpenCV_LIBS})
-target_compile_definitions(imgproc_core PRIVATE "PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
+target_compile_definitions(imgproc_core PUBLIC "PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 
 # Profiled core library for main executable
 add_library(imgproc_core_tracy ${CORE_SRCS})
 target_include_directories(imgproc_core_tracy PUBLIC .) # root for relative imports
 target_link_libraries(imgproc_core_tracy PUBLIC pybind11::embed ${OpenCV_LIBS} TracyClient)
 target_compile_definitions(imgproc_core_tracy PUBLIC TRACY_ENABLE)
-target_compile_definitions(imgproc_core_tracy PRIVATE "PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
+target_compile_definitions(imgproc_core_tracy PUBLIC "PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
 find_package(Threads REQUIRED)
 target_link_libraries(imgproc_core_tracy PUBLIC Threads::Threads ${CMAKE_DL_LIBS})
 
@@ -108,4 +108,3 @@ gtest_discover_tests(unit_tests)
 # Benchmarks with Google benchmark
 add_executable(benchmarks benchmark/image_processing_benchmark.cc)
 target_link_libraries(benchmarks PRIVATE imgproc_core benchmark::benchmark_main)
-target_compile_definitions(benchmarks PRIVATE "PROJECT_ROOT_DIR=\"${CMAKE_SOURCE_DIR}\"")
