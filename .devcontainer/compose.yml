@@ -14,7 +14,7 @@ services:
     security_opt:
       - seccomp:unconfined
     ports:
-      - "1234:1233"
+      - "1234:1234"
       - "8888:8888"
 
     # overrides default command so things don't shut down after process ends
