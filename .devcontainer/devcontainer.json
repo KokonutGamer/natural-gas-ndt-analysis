@@ -8,17 +8,8 @@
 	"shutdownAction": "stopCompose",
 	"customizations": {
 		"vscode": {
-			"extensions": [
-				"ms-vscode.cpptools",
-				"ms-vscode.cpptools-themes",
-				"ms-vscode.cmake-tools",
-				"vadimcn.vscode-lldb",
-				"ms-python.python",
-				"charliermarsh.ruff"
-			],
 			"settings": {
-				"python.defaultInterpreterPath": "/opt/.venv/bin/python",
-				"files.eol": "\n"
+				"python.defaultInterpreterPath": "/opt/.venv/bin/python"
 			}
 		}
 	}
