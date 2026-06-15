@@ -11,28 +11,18 @@ RUN apt-get update && apt-get install -y \
     ninja-build \
     git \
     libopencv-dev \
+    lldb \
+    gdbserver \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
-RUN mkdir -p processed
+WORKDIR /opt
 
 # Cache dependencies; keep freeze the lock file so dependencies stay absolutely the same
 # ENV instruction ensures path variable sets up venv
 COPY pyproject.toml uv.lock ./
+ENV UV_PROJECT_ENVIRONMENT="/opt/.venv"
 RUN uv sync --frozen --no-install-project
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/opt/.venv/bin:$PATH"
 
-# Configure and build (both Debug and Release)
-COPY . .
-RUN uv sync --frozen
-RUN cmake --preset linux-x64-debug
-RUN cmake --build --preset linux-x64-debug
-RUN cmake --preset linux-x64-release
-RUN cmake --build --preset linux-x64-release
-
-WORKDIR /app/bin
-
-# Invoke preferred executable using ./${config}/#{executable}
-# 
-# ./Debug/imgproc --input 
-# ./Debug/unit_tests
+WORKDIR /app
+RUN mkdir -p processed
