@@ -1,0 +1,7 @@
+<map id="ImageProcessor" name="ImageProcessor">
+<area shape="rect" id="Node000001" title="Abstract base class for image processing algorithms." alt="" coords="103,5,229,31"/>
+<area shape="rect" id="Node000002" href="$classCppImageProcessor.html" title="Concrete implementation of ImageProcessor utilizing C++ and OpenCV." alt="" coords="5,79,156,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,41,96,80,93,76,140,37"/>
+<area shape="rect" id="Node000003" href="$classPyImageProcessor.html" title="Concrete implementation of ImageProcessor that delegates execution to Python scripts." alt="" coords="180,79,323,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,37,239,76,236,80,188,41"/>
+</map>

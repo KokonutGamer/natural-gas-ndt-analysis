@@ -1,0 +1,9 @@
+<map id="matched_filter_strategy.PreProcessor" name="matched_filter_strategy.PreProcessor">
+<area shape="rect" id="Node000001" title=" " alt="" coords="107,79,285,119"/>
+<area shape="rect" id="Node000003" href="$classmatched__filter__strategy_1_1BoxBlur.html" title=" " alt="" coords="5,167,184,207"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,130,119,168,115,164,161,126"/>
+<area shape="rect" id="Node000004" href="$classmatched__filter__strategy_1_1GaussianBlur.html" title=" " alt="" coords="208,167,387,207"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="231,126,277,164,273,168,227,130"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="159,5,233,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,44,199,79,193,79,193,44"/>
+</map>

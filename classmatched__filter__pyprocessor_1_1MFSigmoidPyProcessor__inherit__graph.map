@@ -1,0 +1,16 @@
+<map id="matched_filter_pyprocessor.MFSigmoidPyProcessor" name="matched_filter_pyprocessor.MFSigmoidPyProcessor">
+<area shape="rect" id="Node000001" title=" " alt="" coords="207,240,412,280"/>
+<area shape="rect" id="Node000002" href="$classmatched__filter__pyprocessor_1_1BaseMatchedFilter.html" title=" " alt="" coords="132,152,338,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,201,295,238,291,242,258,204"/>
+<area shape="rect" id="Node000003" href="$classabstract__pyprocessor_1_1PyProcessor.html" title=" " alt="" coords="23,79,266,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="170,111,215,150,211,154,166,115"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="40,5,89,31"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="39,42,24,56,13,72,8,88,13,102,30,116,59,129,133,150,131,155,57,134,28,121,9,106,3,88,8,69,20,52,35,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="89,38,133,76,129,80,85,42"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="290,79,362,104"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="304,115,258,154,255,150,300,111"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="386,79,441,104"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="376,112,279,154,277,149,374,107"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="362,159,407,185"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="367,197,328,241,324,238,363,194"/>
+</map>

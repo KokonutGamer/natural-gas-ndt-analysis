@@ -1,0 +1,33 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,269,80,294"/>
+<area shape="rect" id="Node000001" href="$classmatched__filter__strategy_1_1Corrector.html" title=" " alt="" coords="128,101,307,141"/>
+<area shape="poly" id="edge28_Node000000_Node000001" title=" " alt="" coords="60,256,90,220,126,183,183,139,187,143,130,187,94,224,65,259"/>
+<area shape="rect" id="Node000005" href="$classmatched__filter__strategy_1_1Denoiser.html" title=" " alt="" coords="128,197,307,237"/>
+<area shape="poly" id="edge32_Node000000_Node000005" title=" " alt="" coords="89,261,127,247,160,235,161,240,129,252,91,266"/>
+<area shape="rect" id="Node000007" href="$classmatched__filter__strategy_1_1Matcher.html" title=" " alt="" coords="128,261,307,301"/>
+<area shape="poly" id="edge34_Node000000_Node000007" title=" " alt="" coords="94,279,128,279,128,284,94,284"/>
+<area shape="rect" id="Node000010" href="$classmatched__filter__strategy_1_1PreProcessor.html" title=" " alt="" coords="128,325,307,365"/>
+<area shape="poly" id="edge37_Node000000_Node000010" title=" " alt="" coords="91,296,129,311,161,323,160,328,127,316,89,301"/>
+<area shape="rect" id="Node000013" href="$classmatched__filter__strategy_1_1Thresholder.html" title=" " alt="" coords="128,453,307,493"/>
+<area shape="poly" id="edge40_Node000000_Node000013" title=" " alt="" coords="66,303,130,376,199,451,195,455,126,379,62,307"/>
+<area shape="rect" id="Node000002" href="$classmatched__filter__strategy_1_1GammaCorrector.html" title=" " alt="" coords="377,5,556,45"/>
+<area shape="poly" id="edge29_Node000001_Node000002" title=" " alt="" coords="268,93,354,55,389,43,391,48,356,60,271,98"/>
+<area shape="rect" id="Node000003" href="$classmatched__filter__strategy_1_1Normalizer.html" title=" " alt="" coords="377,69,556,109"/>
+<area shape="poly" id="edge30_Node000001_Node000003" title=" " alt="" coords="320,106,377,98,377,103,321,111"/>
+<area shape="rect" id="Node000004" href="$classmatched__filter__strategy_1_1SigmoidStretcher.html" title=" " alt="" coords="377,133,556,173"/>
+<area shape="poly" id="edge31_Node000001_Node000004" title=" " alt="" coords="321,132,377,139,377,145,320,137"/>
+<area shape="rect" id="Node000006" href="$classmatched__filter__strategy_1_1ConnectedComponentDenoiser.html" title=" " alt="" coords="355,197,579,237"/>
+<area shape="poly" id="edge33_Node000005_Node000006" title=" " alt="" coords="320,215,355,215,355,220,320,220"/>
+<area shape="rect" id="Node000008" href="$classmatched__filter__strategy_1_1GaussianMatcher.html" title=" " alt="" coords="377,261,556,301"/>
+<area shape="poly" id="edge35_Node000007_Node000008" title=" " alt="" coords="320,279,377,279,377,284,320,284"/>
+<area shape="rect" id="Node000009" href="$classmatched__filter__strategy_1_1PyramidGaussianMatcher.html" title=" " alt="" coords="627,261,816,301"/>
+<area shape="poly" id="edge36_Node000008_Node000009" title=" " alt="" coords="570,279,626,279,626,284,570,284"/>
+<area shape="rect" id="Node000011" href="$classmatched__filter__strategy_1_1BoxBlur.html" title=" " alt="" coords="377,325,556,365"/>
+<area shape="poly" id="edge38_Node000010_Node000011" title=" " alt="" coords="320,343,377,343,377,348,320,348"/>
+<area shape="rect" id="Node000012" href="$classmatched__filter__strategy_1_1GaussianBlur.html" title=" " alt="" coords="377,389,556,429"/>
+<area shape="poly" id="edge39_Node000010_Node000012" title=" " alt="" coords="310,366,389,387,388,392,308,371"/>
+<area shape="rect" id="Node000014" href="$classmatched__filter__strategy_1_1BinaryThresholder.html" title=" " alt="" coords="377,453,556,493"/>
+<area shape="poly" id="edge41_Node000013_Node000014" title=" " alt="" coords="320,471,377,471,377,476,320,476"/>
+<area shape="rect" id="Node000015" href="$classmatched__filter__strategy_1_1HysteresisThresholder.html" title=" " alt="" coords="377,517,556,557"/>
+<area shape="poly" id="edge42_Node000013_Node000015" title=" " alt="" coords="310,494,389,515,388,520,308,499"/>
+</map>

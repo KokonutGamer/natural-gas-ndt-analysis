@@ -1,0 +1,7 @@
+<map id="matched_filter_strategy.Denoiser" name="matched_filter_strategy.Denoiser">
+<area shape="rect" id="Node000001" title=" " alt="" coords="28,79,207,119"/>
+<area shape="rect" id="Node000003" href="$classmatched__filter__strategy_1_1ConnectedComponentDenoiser.html" title=" " alt="" coords="5,167,229,207"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,133,120,166,115,166,115,133"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="80,5,155,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,44,120,79,115,79,115,44"/>
+</map>
