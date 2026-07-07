@@ -1,0 +1,21 @@
+services:
+  dev:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+
+    # binds volumes to project root directory (workspace)
+    volumes:
+      - ..:/app
+
+    # enable ptrace-based debugger
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "1234:1234"
+      - "8888:8888"
+
+    # overrides default command so things don't shut down after process ends
+    command: sleep infinity

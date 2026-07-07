@@ -6,8 +6,8 @@
 #include <pybind11/embed.h>
 
 // processors only ever created once
-static std::unique_ptr<CppImageProcessor> cppImageProcessor = std::make_unique<CppImageProcessor>();
-static std::unique_ptr<PyImageProcessor> pyImageProcessor = std::make_unique<PyImageProcessor>();
+static std::unique_ptr<CppImageProcessor> cppImageProcessor;
+static std::unique_ptr<PyImageProcessor> pyImageProcessor;
 
 // ==========================================
 // C++ Processor Tests
@@ -31,4 +31,15 @@ TEST(NameTest, PyImageProcessorHasCorrectName) {
 
   // Assert
   EXPECT_EQ(name, "Filter-Mask-Morph (FMM) Python image processor");
+}
+
+int main(int argc, char *argv[]) {
+  // initialize processors inside main
+  cppImageProcessor = std::make_unique<CppImageProcessor>();
+  pyImageProcessor = std::make_unique<PyImageProcessor>();
+
+  ::testing::InitGoogleTest(&argc, argv);
+  int result = RUN_ALL_TESTS();
+
+  return result;
 }

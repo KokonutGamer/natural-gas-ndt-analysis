@@ -10,8 +10,8 @@ static const std::filesystem::path imageDirectory = PROJECT_ROOT_DIR "/images";
 static cv::Mat image;
 
 // processors only ever created once
-static std::unique_ptr<CppImageProcessor> cppImageProcessor = std::make_unique<CppImageProcessor>();
-static std::unique_ptr<PyImageProcessor> pyImageProcessor = std::make_unique<PyImageProcessor>();
+static std::unique_ptr<CppImageProcessor> cppImageProcessor;
+static std::unique_ptr<PyImageProcessor> pyImageProcessor;
 
 auto peformanceBenchmark = [](::benchmark::State &state, const ImageProcessor *processor, const cv::Mat &image,
                               const std::string method) {
@@ -21,12 +21,16 @@ auto peformanceBenchmark = [](::benchmark::State &state, const ImageProcessor *p
 };
 
 int main(int argc, char *argv[]) {
+  // initialize processors inside main
+  cppImageProcessor = std::make_unique<CppImageProcessor>();
+  pyImageProcessor = std::make_unique<PyImageProcessor>();
+
   // set up the static image for processing
   cv::Mat image;
   try {
     std::filesystem::path imagePath = imageDirectory / "0070.bmp";
 
-    image = cv::imread(imagePath, cv::ImreadModes::IMREAD_GRAYSCALE);
+    image = cv::imread(imagePath.string(), cv::ImreadModes::IMREAD_GRAYSCALE);
 
     if (image.empty()) {
       std::cerr << "Failed to read from " << imagePath.string() << std::endl;

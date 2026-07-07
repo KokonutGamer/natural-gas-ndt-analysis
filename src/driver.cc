@@ -11,15 +11,18 @@
 #include <string>
 #include <vector>
 
+static const std::filesystem::path imageDirectory = PROJECT_ROOT_DIR "/images";
+static const std::filesystem::path outputDirectory = PROJECT_ROOT_DIR "/processed";
+
 int main(int argc, char *argv[]) {
   cxxopts::Options options("NDT Image Analyzer", "Non-destructive testing "
                                                  "image processing software developed for detecting microcracks and "
                                                  "micropits on the Raspberry Pi 5");
 
   options.add_options()("p,python", "Run with the embedded Python interpreter")("h,help", "Print usage")(
-      "i,image", "Process an image", cxxopts::value<std::string>()->default_value("./images/0070.bmp"))(
+      "i,image", "Process an image", cxxopts::value<std::string>()->default_value(imageDirectory / "0070.bmp"))(
       "o,output", "Output the processed image to a file",
-      cxxopts::value<std::string>()->default_value("./processed/test_result.png"))(
+      cxxopts::value<std::string>()->default_value(outputDirectory / "test_result.png"))(
       "a,algorithm", "Python algorithm used for processing the image",
       cxxopts::value<std::string>()->default_value("fmm"));
 
@@ -44,7 +47,7 @@ int main(int argc, char *argv[]) {
     std::filesystem::path imagePath = std::filesystem::canonical(result["image"].as<std::string>());
 
     // read from the image
-    cv::Mat image = cv::imread(imagePath, cv::ImreadModes::IMREAD_GRAYSCALE);
+    cv::Mat image = cv::imread(imagePath.string(), cv::ImreadModes::IMREAD_GRAYSCALE);
 
     // check if read was successful
     if (image.empty()) {
