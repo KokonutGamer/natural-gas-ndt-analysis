@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /opt
 
-# Cache dependencies; keep freeze the lock file so dependencies stay absolutely the same
+# Cache dependencies; freeze the lock file so dependencies stay absolutely the same
 # ENV instruction ensures path variable sets up venv
 COPY pyproject.toml uv.lock ./
 ENV UV_PROJECT_ENVIRONMENT="/opt/.venv"
